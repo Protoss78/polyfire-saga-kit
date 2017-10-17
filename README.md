@@ -15,6 +15,7 @@ Mainly because I'm teaching myself on the way and got inspiration from various b
 * [Polymer Redux Documentation](https://tur-nr.github.io/polymer-redux/docs)
 * [Redux-Saga Documentation](https://redux-saga.js.org/)
 * [A Guide For Building A React Redux CRUD App](https://medium.com/@rajaraodv/a-guide-for-building-a-react-redux-crud-app-7fe0b8943d0f)
+* [How to combine polymer-redux and <app-route>?](https://stackoverflow.com/questions/41440316/how-to-combine-polymer-redux-and-app-route/43479815)
 
 ## Implementation Roadmap
 - [x] Basic Polymer, Redux and Redux-Saga setup 

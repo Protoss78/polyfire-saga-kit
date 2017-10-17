@@ -1,0 +1,112 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/app-route/app-location.html">
+<link rel="import" href="../bower_components/app-route/app-route.html">
+
+<dom-module id="redux-router">
+    <template>
+        <app-location route="{{route}}"  id="location" use-hash-as-path></app-location>
+        <app-route
+                active="{{active}}"
+                route="{{route}}"
+                pattern="/:entity/:id"
+                data="{{page}}"
+                tail="{{tail}}">
+        </app-route>
+    </template>
+
+    <script>
+        class ReduxRouter extends Polymer.Element {
+            static get is() { return 'redux-router'; }
+            static get properties() {
+                return {
+                    page: {
+                        type: Object,
+                        value: {},
+                        observer: '_changeRoute(page)'
+                    },
+                    entityId: {
+                        type: String,
+                        statePath: 'entityId',
+                    },
+                    entity: {
+                        type: String,
+                        statePath: 'entity',
+                    },
+                    active:{
+                        type: Boolean,
+                        observer:'_onInValidRoute'
+                    }
+                };
+            }
+
+            static get observers() {
+                return [
+                    '_changeStepOrAnalysisId(currentStep,currentAnalysisId)',
+                ]
+            }
+
+            static get actions() {
+                changeStep: function(step) {
+                    return {
+                        type: 'CHANGE_CURRENT_STEP',
+                        step,
+                    }
+                },
+                loadAnalysis: function(id,step)  {
+                    return {
+                        type: 'LOAD_ANALYSIS',
+                        id,
+                        step,
+                    }
+                },
+            }
+
+            constructor() {
+                super();
+                this._initialized = false;
+            }
+
+            ready() {
+                super.ready();
+                // required otherwise if navigating to a sub-route for the first time will be reset, by the localstorage initial redux state update
+                this._initialized = true;
+            }
+            _changeRoute(page) {
+                // required because otherwise
+                this.debounce('route_update',()=>{
+                    let step = page.step;
+                    let id = page.id;
+
+                    if (id && this.getState().id !== id) {
+                        ga('send', 'event', 'Analysis', 'load');
+                        this.dispatch('loadAnalysis',id,step)
+                    }
+                    else if (this.getState().currentStep !== step) {
+                        this.dispatch('changeStep',step);
+                    }
+                    ga('send', 'pageview');
+                },1);
+            }
+
+            _changeStepOrAnalysisId(step, id) {
+                if (!this._initialized) {
+                    return;
+                }
+                this.debounce('state_changed',()=>{
+                    if (this.page.step !== step || (this.page.id !== id && this.page.id !== '' && id !== null)) {
+                        this.page = {step,id};
+                    }
+                })
+            },
+            _onInValidRoute: function(valid) {
+                if (!valid) {
+                    this.async(()=> {
+                        this.$.location.set('route.path','/start/');
+                    })
+                }
+            },
+        }
+
+        window.customElements.define(ReduxRouter.is, ReduxRouter);
+    </script>
+</dom-module>
