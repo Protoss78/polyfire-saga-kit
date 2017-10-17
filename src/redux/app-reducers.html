@@ -3,17 +3,31 @@
 <script>
     (function() {
 
-        function selectedSubreddit(state = 'PolymerJS', action) {
+        function showLoadingSpinner(state = false, action) {
             switch (action.type) {
-                case 'SELECT_SUBREDDIT':
-                    return action.subreddit
+                case 'SHOW_LOADING_SPINNER':
+                    return true;
+                case 'LOADING_DONE':
+                    return false;
                 default:
-                    return state
+                    return false
+            }
+        }
+
+        function loadedList(state = [], action) {
+            switch (action.type) {
+                case 'SET_LOADED_LIST':
+                    return action.result;
+                case 'CLEAR_LOADED_LIST':
+                    return [];
+                default:
+                    return [];
             }
         }
 
         MyApp.rootReducer = Redux.combineReducers({
-            selectedSubreddit
+            showLoadingSpinner,
+            loadedList
         })
 
     }());

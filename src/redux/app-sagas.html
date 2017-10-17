@@ -6,12 +6,16 @@
         const effects = ReduxSaga.effects;
 
         // worker Saga: will be fired on USER_FETCH_REQUESTED actions
-        function* fetchUser(action) {
+        function* loadList(action) {
             try {
-                const user = yield effects.call(Api.fetchUser, action.payload.userId);
-                yield effects.put({type: "USER_FETCH_SUCCEEDED", user: user});
+                yield effects.put(MyApp.actions.showSpinner(true));
+                let result = [1, 2, 3, 4, 5];
+                yield effects.call(delay, 2000)
+                yield effects.put(MyApp.actions.setLoadedList(result));
+                yield effects.put(MyApp.actions.showSpinner(false));
             } catch (e) {
-                yield effects.put({type: "USER_FETCH_FAILED", message: e.message});
+                yield effects.put(MyApp.actions.clearLoadedList());
+                yield effects.put(MyApp.actions.showSpinner(false));
             }
         }
 
@@ -20,7 +24,7 @@
           Allows concurrent fetches of user.
         */
         function* rootSaga() {
-            yield effects.takeEvery("USER_FETCH_REQUESTED", fetchUser);
+            yield effects.takeEvery("LOAD_LIST", loadList);
         }
 
 

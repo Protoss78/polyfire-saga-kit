@@ -1,63 +1,30 @@
 <script>
     (function() {
 
-        function requestPosts(subreddit) {
+        function showSpinner(doShowSpinner) {
+            if (doShowSpinner) {
+                return {type: "SHOW_LOADING_SPINNER"};
+            }
+            return {type: "LOADING_DONE"};
+        }
+
+        function setLoadedList(result) {
             return {
-                type: 'REQUEST_POSTS',
-                subreddit
-            }
+                type: 'SET_LOADED_LIST',
+                result: result
+            };
         }
 
-        function receivePosts(subreddit, json) {
+        function clearLoadedList() {
             return {
-                type: 'RECEIVE_POSTS',
-                subreddit,
-                posts: json.data.children.map(child => child.data),
-            receivedAt: Date.now()
-        }
-        }
-
-        function fetchPosts(subreddit) {
-            return dispatch => {
-                dispatch(requestPosts(subreddit))
-                return fetch(`https://www.reddit.com/r/${subreddit}.json`)
-                    .then(response => response.json())
-            .then(json => dispatch(receivePosts(subreddit, json)))
-            }
-        }
-
-        function shouldFetchPosts(state, subreddit) {
-            const posts = state.postsBySubreddit[subreddit]
-            if (!posts) {
-                return true
-            } else if (posts.isFetching) {
-                return false
-            } else {
-                return posts.didInvalidate
-            }
-        }
-
-        function fetchPostsIfNeeded(subreddit) {
-            // Note that the function also receives getState()
-            // which lets you choose what to dispatch next.
-
-            // This is useful for avoiding a network request if
-            // a cached value is already available.
-
-            return (dispatch, getState) => {
-                if (shouldFetchPosts(getState(), subreddit)) {
-                    // Dispatch a thunk from thunk!
-                    return dispatch(fetchPosts(subreddit))
-                } else {
-                    // Let the calling code know there's nothing to wait for.
-                    return Promise.resolve()
-                }
-            }
+                type: 'CLEAR_LOADED_LIST'
+            };
         }
 
         MyApp.actions = {
-            fetchPosts,
-            fetchPostsIfNeeded,
+            showSpinner,
+            setLoadedList,
+            clearLoadedList,
         }
 
     }());
