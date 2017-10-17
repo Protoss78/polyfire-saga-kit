@@ -2,10 +2,10 @@
 A (hopefully) simple sample application that combines Polymer, Firebase, redux and redux-saga into something reusable. 
 
 The main idea is to create a Polymer Starter Kit based web application sample, that demonstrates how
-* Polymer
-* Firebase
-* Redux
-* Redux Sagas
+- [x] Polymer
+- [ ] Firebase
+- [x] Redux
+- [x] Redux Sagas
 
 can be combined in a useful way.
 
