@@ -1,11 +1,13 @@
 <script>
+    var AppStore = {};
+
     (function() {
 
         function showSpinner(doShowSpinner) {
             if (doShowSpinner) {
-                return {type: "SHOW_LOADING_SPINNER"};
+                return {type: 'SHOW_LOADING_SPINNER'};
             }
-            return {type: "LOADING_DONE"};
+            return {type: 'LOADING_DONE'};
         }
 
         function setLoadedList(result) {
@@ -21,10 +23,20 @@
             };
         }
 
-        MyApp.actions = {
+        function loadList() {
+            return { type: 'LOAD_LIST'};
+        }
+
+        function clearList() {
+            return { type: 'CLEAR_LIST'};
+        }
+
+        AppStore.actions = {
             showSpinner,
             setLoadedList,
             clearLoadedList,
+            loadList,
+            clearList
         }
 
     }());

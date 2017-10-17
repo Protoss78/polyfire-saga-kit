@@ -10,7 +10,7 @@
                 case 'LOADING_DONE':
                     return false;
                 default:
-                    return false
+                    return state;
             }
         }
 
@@ -21,11 +21,11 @@
                 case 'CLEAR_LOADED_LIST':
                     return [];
                 default:
-                    return [];
+                    return state;
             }
         }
 
-        MyApp.rootReducer = Redux.combineReducers({
+        AppStore.rootReducer = Redux.combineReducers({
             showLoadingSpinner,
             loadedList
         })

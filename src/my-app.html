@@ -20,7 +20,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../bower_components/iron-selector/iron-selector.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../bower_components/paper-progress/paper-progress.html">
 <link rel="import" href="my-icons.html">
+<link rel="import" href="redux/app-store.html">
+
 
 <link rel="lazy-import" href="my-view1.html">
 <link rel="lazy-import" href="my-view2.html">
@@ -66,6 +69,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         color: black;
         font-weight: bold;
       }
+
+      paper-progress {
+        display: block;
+        width: 100%;
+        --paper-progress-active-color: rgba(255, 255, 255, 0.5);
+        --paper-progress-container-color: transparent;
+      }
     </style>
 
     <app-location
@@ -98,6 +108,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <app-toolbar>
             <paper-icon-button icon="my-icons:menu" drawer-toggle></paper-icon-button>
             <div main-title>My App</div>
+            <paper-progress bottom-item indeterminate$="{{showLoadingSpinner}}"></paper-progress>
           </app-toolbar>
         </app-header>
 
@@ -116,7 +127,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   </template>
 
   <script>
-    class MyApp extends Polymer.Element {
+    class MyApp extends AppStore.ReduxMixin(Polymer.Element) {
       static get is() { return 'my-app'; }
 
       static get properties() {
@@ -131,6 +142,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           // This shouldn't be neccessary, but the Analyzer isn't picking up
           // Polymer.Element#rootPath
           rootPath: String,
+          showLoadingSpinner: {
+              type: Boolean,
+              statePath: 'showLoadingSpinner'
+          }
         };
       }
 

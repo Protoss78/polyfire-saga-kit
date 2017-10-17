@@ -9,8 +9,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 -->
 
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="shared-styles.html">
-<link rel="import" href="redux/app-store.html">
 
 <dom-module id="my-view1">
   <template>
@@ -27,12 +27,39 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <h1>View One</h1>
       <p>Ut labores minimum atomorum pro. Laudem tibique ut has.</p>
       <p>Lorem ipsum dolor sit amet, per in nusquam nominavi periculis, sit elit oportere ea.Lorem ipsum dolor sit amet, per in nusquam nominavi periculis, sit elit oportere ea.Cu mei vide viris gloriatur, at populo eripuit sit.</p>
+      <paper-button raised on-tap="loadList">Load List</paper-button>
+      <paper-button raised on-tap="clearList">Clear List</paper-button>
+      <div>
+        <h3>Loaded List</h3>
+        <ul>
+        <template is="dom-repeat" items="{{loadedList}}">
+            <li>[[item]]</li>
+        </template>
+        </ul>
+      </div>
+
     </div>
   </template>
 
   <script>
-    class MyView1 extends Polymer.Element {
+    class MyView1 extends AppStore.ReduxMixin(Polymer.Element) {
       static get is() { return 'my-view1'; }
+        static get properties() {
+            return {
+                loadedList: {
+                    type: Array,
+                    statePath: 'loadedList'
+                }
+            }
+        }
+
+        loadList() {
+          this.dispatch(AppStore.actions.loadList());
+        }
+
+        clearList() {
+          this.dispatch(AppStore.actions.clearList());
+        }
     }
 
     window.customElements.define(MyView1.is, MyView1);

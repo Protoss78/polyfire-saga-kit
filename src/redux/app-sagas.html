@@ -10,13 +10,21 @@
             try {
                 yield effects.put(MyApp.actions.showSpinner(true));
                 let result = [1, 2, 3, 4, 5];
-                yield effects.call(delay, 2000)
+                yield ReduxSaga.delay(1000);
                 yield effects.put(MyApp.actions.setLoadedList(result));
                 yield effects.put(MyApp.actions.showSpinner(false));
             } catch (e) {
+                console.log(e);
                 yield effects.put(MyApp.actions.clearLoadedList());
                 yield effects.put(MyApp.actions.showSpinner(false));
             }
+        }
+
+        function* clearList(action) {
+            yield effects.put(MyApp.actions.showSpinner(true));
+            yield ReduxSaga.delay(1000);
+            yield effects.put(MyApp.actions.clearLoadedList());
+            yield effects.put(MyApp.actions.showSpinner(false));
         }
 
         /*
@@ -24,11 +32,12 @@
           Allows concurrent fetches of user.
         */
         function* rootSaga() {
-            yield effects.takeEvery("LOAD_LIST", loadList);
+            yield effects.takeEvery('LOAD_LIST', loadList);
+            yield effects.takeEvery('CLEAR_LIST', clearList);
         }
 
 
-        MyApp.rootSaga = rootSaga;
+        AppStore.rootSaga = rootSaga;
 
     }());
 </script>

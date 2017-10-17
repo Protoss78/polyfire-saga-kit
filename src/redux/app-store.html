@@ -23,8 +23,8 @@
             Redux.applyMiddleware(sagaMiddleware),
             );
 
-        const store = Redux.createStore(MyApp.rootReducer, enhancer);
-        sagaMiddleware.run(MyApp.rootSaga);
+        const store = Redux.createStore(AppStore.rootReducer, enhancer);
+        sagaMiddleware.run(AppStore.rootSaga);
 
         const reduxMixin = PolymerRedux(store);
 
@@ -32,13 +32,13 @@
         const actionsMixin = (superClass) => {
             return class extends reduxMixin(superClass) {
                 static get actions() {
-                    return MyApp.actions
+                    return AppStore.actions
                 }
             }
         }
 
         /* @mixinFunction */
-        MyApp.ReduxMixin = Polymer.dedupingMixin(actionsMixin);
+        AppStore.ReduxMixin = Polymer.dedupingMixin(actionsMixin);
 
     }());
 </script>
