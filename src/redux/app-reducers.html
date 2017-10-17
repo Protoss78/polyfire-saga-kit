@@ -1,0 +1,20 @@
+<script src="../../node_modules/redux/dist/redux.min.js"></script>
+
+<script>
+    (function() {
+
+        function selectedSubreddit(state = 'PolymerJS', action) {
+            switch (action.type) {
+                case 'SELECT_SUBREDDIT':
+                    return action.subreddit
+                default:
+                    return state
+            }
+        }
+
+        MyApp.rootReducer = Redux.combineReducers({
+            selectedSubreddit
+        })
+
+    }());
+</script>
