@@ -15,3 +15,12 @@ Mainly because I'm teaching myself on the way and got inspiration from various b
 * [Polymer Redux Documentation](https://tur-nr.github.io/polymer-redux/docs)
 * [Redux-Saga Documentation](https://redux-saga.js.org/)
 * [A Guide For Building A React Redux CRUD App](https://medium.com/@rajaraodv/a-guide-for-building-a-react-redux-crud-app-7fe0b8943d0f)
+
+## Implementation Roadmap
+- [x] Basic Polymer, Redux and Redux-Saga setup 
+- [ ] Implement a fake loading mechanism (bind state via polymer-redux)
+- [ ] Integrate app-router with redux and add location to store
+- [ ] Integrate Firebase via Polymerfire
+- [ ] Implement Firebase Query and display results (use redux-saga)
+- [ ] Simple edit screen that uses Firebase Document
+- [ ] Add Firebase authentication and add user to redux-store
