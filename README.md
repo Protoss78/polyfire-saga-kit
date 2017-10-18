@@ -26,3 +26,4 @@ Mainly because I'm teaching myself on the way and got inspiration from various b
 - [ ] Implement Firebase Query and display results (use redux-saga)
 - [ ] Simple edit screen that uses Firebase Document
 - [ ] Add Firebase authentication and add user to redux-store
+- [ ] Add internationalization support
