@@ -25,9 +25,18 @@
             }
         }
 
+        function location(state = {}, action) {
+            switch (action.type) {
+                case 'LOCATION_CHANGED':
+                    return action.location;
+            }
+            return state;
+        }
+
         AppStore.rootReducer = Redux.combineReducers({
             showLoadingSpinner,
-            loadedList
+            loadedList,
+            location
         })
 
     }());

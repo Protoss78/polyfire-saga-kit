@@ -1,110 +1,85 @@
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../bower_components/app-route/app-location.html">
 <link rel="import" href="../bower_components/app-route/app-route.html">
+<link rel="import" href="redux/app-store.html">
 
 <dom-module id="redux-router">
     <template>
-        <app-location route="{{route}}"  id="location" use-hash-as-path></app-location>
-        <app-route
-                active="{{active}}"
+        <app-location
                 route="{{route}}"
-                pattern="/:entity/:id"
-                data="{{page}}"
-                tail="{{tail}}">
+                url-space-regex="^[[rootPath]]">
+        </app-location>
+        <app-route
+                route="{{route}}"
+                pattern="[[rootPath]]:page"
+                data="{{routeData}}"
+                tail="{{subroute}}">
         </app-route>
+        <app-route
+                route="{{subroute}}"
+                pattern="/:id"
+                data="{{subrouteData}}">
+        </app-route>
+
     </template>
 
     <script>
-        class ReduxRouter extends Polymer.Element {
+        class ReduxRouter extends AppStore.ReduxMixin(Polymer.Element) {
             static get is() { return 'redux-router'; }
             static get properties() {
                 return {
                     page: {
-                        type: Object,
-                        value: {},
-                        observer: '_changeRoute(page)'
-                    },
-                    entityId: {
                         type: String,
-                        statePath: 'entityId',
+                        observer: '_pageChanged',
                     },
-                    entity: {
-                        type: String,
-                        statePath: 'entity',
+                    id: {
+                        type: String
                     },
-                    active:{
-                        type: Boolean,
-                        observer:'_onInValidRoute'
-                    }
+                    routeData: {
+                        type: Object
+                    },
+                    subrouteData: {
+                        type: Object
+                    },
+                    // This shouldn't be neccessary, but the Analyzer isn't picking up
+                    // Polymer.Element#rootPath
+                    rootPath: String,
                 };
             }
 
             static get observers() {
                 return [
-                    '_changeStepOrAnalysisId(currentStep,currentAnalysisId)',
-                ]
+                    '_routePageChanged(routeData.page)',
+                    '_locationChanged(page, id)'
+                ];
             }
 
-            static get actions() {
-                changeStep: function(step) {
-                    return {
-                        type: 'CHANGE_CURRENT_STEP',
-                        step,
-                    }
-                },
-                loadAnalysis: function(id,step)  {
-                    return {
-                        type: 'LOAD_ANALYSIS',
-                        id,
-                        step,
-                    }
-                },
+            _locationChanged(page, id) {
+                let location = {page: page, id: id};
+                this.dispatch(AppStore.actions.locationChanged(location));
             }
 
-            constructor() {
-                super();
-                this._initialized = false;
-            }
+            _routePageChanged(page) {
+                // If no page was found in the route data, page will be an empty string.
+                // Default to 'view1' in that case.
+                this.page = page || 'view1';
 
-            ready() {
-                super.ready();
-                // required otherwise if navigating to a sub-route for the first time will be reset, by the localstorage initial redux state update
-                this._initialized = true;
-            }
-            _changeRoute(page) {
-                // required because otherwise
-                this.debounce('route_update',()=>{
-                    let step = page.step;
-                    let id = page.id;
-
-                    if (id && this.getState().id !== id) {
-                        ga('send', 'event', 'Analysis', 'load');
-                        this.dispatch('loadAnalysis',id,step)
-                    }
-                    else if (this.getState().currentStep !== step) {
-                        this.dispatch('changeStep',step);
-                    }
-                    ga('send', 'pageview');
-                },1);
-            }
-
-            _changeStepOrAnalysisId(step, id) {
-                if (!this._initialized) {
-                    return;
+                // Close a non-persistent drawer when the page & route are changed.
+                if (!this.$.drawer.persistent) {
+                    this.$.drawer.close();
                 }
-                this.debounce('state_changed',()=>{
-                    if (this.page.step !== step || (this.page.id !== id && this.page.id !== '' && id !== null)) {
-                        this.page = {step,id};
-                    }
-                })
-            },
-            _onInValidRoute: function(valid) {
-                if (!valid) {
-                    this.async(()=> {
-                        this.$.location.set('route.path','/start/');
-                    })
-                }
-            },
+            }
+
+            _pageChanged(page) {
+                // Load page import on demand. Show 404 page if fails
+                var resolvedPageUrl = this.resolveUrl('my-' + page + '.html');
+                Polymer.importHref(
+                    resolvedPageUrl,
+                    null,
+                    this._showPage404.bind(this),
+                    true);
+            }
+
         }
 
         window.customElements.define(ReduxRouter.is, ReduxRouter);

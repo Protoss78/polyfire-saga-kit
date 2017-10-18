@@ -10,6 +10,13 @@
             return {type: 'LOADING_DONE'};
         }
 
+        function locationChanged(newLocation) {
+            return {
+                type: 'LOCATION_CHANGED',
+                location: newLocation
+            };
+        }
+
         function setLoadedList(result) {
             return {
                 type: 'SET_LOADED_LIST',
@@ -36,7 +43,8 @@
             setLoadedList,
             clearLoadedList,
             loadList,
-            clearList
+            clearList,
+            locationChanged
         }
 
     }());
