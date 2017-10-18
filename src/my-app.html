@@ -143,8 +143,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 console.log(location);
                 this.page = location.page;
                 this.id = location.id;
-                if (!this.$.drawer.persistent) {
-                    // TODO: Move this handling into redux state as well
+
+                // Close drawer if it is open and not persistent
+                if (!this.$.drawer.persistent && this.$.drawer.opened) {
                     this.$.drawer.close();
                 }
 
