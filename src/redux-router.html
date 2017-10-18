@@ -9,6 +9,7 @@
                 route="{{route}}"
                 url-space-regex="^[[rootPath]]">
         </app-location>
+
         <app-route
                 route="{{route}}"
                 pattern="[[rootPath]]:page"
@@ -16,6 +17,7 @@
                 tail="{{subroute}}">
         </app-route>
         <app-route
+                active="{{isSubActive}}"
                 route="{{subroute}}"
                 pattern="/:id"
                 data="{{subrouteData}}">
@@ -28,11 +30,9 @@
             static get is() { return 'redux-router'; }
             static get properties() {
                 return {
-                    page: {
-                        type: String,
-                        observer: '_pageChanged',
-                    },
-                    id: {
+                    page: String,
+                    id: String,
+                    subroute: {
                         type: String
                     },
                     routeData: {
@@ -41,6 +41,7 @@
                     subrouteData: {
                         type: Object
                     },
+                    isSubActive: Boolean,
                     // This shouldn't be neccessary, but the Analyzer isn't picking up
                     // Polymer.Element#rootPath
                     rootPath: String,
@@ -49,35 +50,22 @@
 
             static get observers() {
                 return [
-                    '_routePageChanged(routeData.page)',
-                    '_locationChanged(page, id)'
+                    '_routePageChanged(routeData.page, subrouteData.id)',
                 ];
             }
 
-            _locationChanged(page, id) {
-                let location = {page: page, id: id};
-                this.dispatch(AppStore.actions.locationChanged(location));
-            }
-
-            _routePageChanged(page) {
+            _routePageChanged(page, id) {
                 // If no page was found in the route data, page will be an empty string.
                 // Default to 'view1' in that case.
                 this.page = page || 'view1';
-
-                // Close a non-persistent drawer when the page & route are changed.
-                if (!this.$.drawer.persistent) {
-                    this.$.drawer.close();
+                // Remove id element from location if subroute is not active,
+                // otherwise the previous id value would remain in the location state
+                if (this.isSubActive) {
+                    this.id = id;
+                } else {
+                    this.id = undefined;
                 }
-            }
-
-            _pageChanged(page) {
-                // Load page import on demand. Show 404 page if fails
-                var resolvedPageUrl = this.resolveUrl('my-' + page + '.html');
-                Polymer.importHref(
-                    resolvedPageUrl,
-                    null,
-                    this._showPage404.bind(this),
-                    true);
+                this.dispatch(AppStore.actions.locationChanged({page: this.page, id: this.id}));
             }
 
         }

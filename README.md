@@ -20,7 +20,9 @@ Mainly because I'm teaching myself on the way and got inspiration from various b
 ## Implementation Roadmap
 - [x] Basic Polymer, Redux and Redux-Saga setup 
 - [x] Implement a fake loading mechanism (bind state via polymer-redux)
-- [ ] Integrate app-router with redux and add location to store
+- [x] Integrate app-router with redux and add location to store
+- [ ] Implement a generic navigation action
+- [ ] Add sidebar state into redux store and toggle it via actions
 - [ ] Integrate Firebase via Polymerfire
 - [ ] Implement Firebase Query and display results (use redux-saga)
 - [ ] Simple edit screen that uses Firebase Document

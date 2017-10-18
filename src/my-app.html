@@ -23,7 +23,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/paper-progress/paper-progress.html">
 <link rel="import" href="my-icons.html">
 <link rel="import" href="redux/app-store.html">
-
+<link rel="import" href="redux-router.html">
 
 <link rel="lazy-import" href="my-view1.html">
 <link rel="lazy-import" href="my-view2.html">
@@ -78,17 +78,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             }
         </style>
 
-        <app-location
-                route="{{route}}"
-                url-space-regex="^[[rootPath]]">
-        </app-location>
-
-        <app-route
-                route="{{route}}"
-                pattern="[[rootPath]]:page/:id"
-                data="{{routeData}}"
-                tail="{{subroute}}">
-        </app-route>
+        <redux-router></redux-router>
 
         <app-drawer-layout fullbleed narrow="{{narrow}}">
             <!-- Drawer content -->
@@ -134,23 +124,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
             static get properties() {
                 return {
-                    page: {
-                        type: String,
-                        reflectToAttribute: true,
-                        observer: '_pageChanged',
-                    },
-                    id: {
-                        type: String
-                    },
-                    subroute: {
-                        type: String
-                    },
-                    routeData: {
-                        type: Object
-                    },
-                    // This shouldn't be neccessary, but the Analyzer isn't picking up
-                    // Polymer.Element#rootPath
-                    rootPath: String,
+                    page: String,
+                    id: String,
                     showLoadingSpinner: {
                         type: Boolean,
                         statePath: 'showLoadingSpinner'
@@ -163,34 +138,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 };
             }
 
-            static get observers() {
-                return [
-                    '_routePageChanged(routeData.page, routeData.id)',
-                ];
-            }
-
             _locationChanged(location) {
                 // Just checking if location state observation works
                 console.log(location);
-            }
-
-            _routePageChanged(page, id) {
-                // If no page was found in the route data, page will be an empty string.
-                // Default to 'view1' in that case.
-                this.page = page || 'view1';
-                this.id = id;
-                this.dispatch(AppStore.actions.locationChanged({page: page, id: id}));
-
-                // Close a non-persistent drawer when the page & route are changed.
+                this.page = location.page;
+                this.id = location.id;
                 if (!this.$.drawer.persistent) {
                     // TODO: Move this handling into redux state as well
                     this.$.drawer.close();
                 }
-            }
 
-            _pageChanged(page) {
                 // Load page import on demand. Show 404 page if fails
-                let resolvedPageUrl = this.resolveUrl('my-' + page + '.html');
+                let resolvedPageUrl = this.resolveUrl('my-' + location.page + '.html');
                 Polymer.importHref(
                     resolvedPageUrl,
                     null,
@@ -199,6 +158,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             }
 
             _showPage404() {
+                // TODO: Must be reworked into an Action -> goToLocation
                 this.page = 'view404';
             }
         }
