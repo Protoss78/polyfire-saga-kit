@@ -38,13 +38,18 @@
             return { type: 'CLEAR_LIST'};
         }
 
+        function navigateTo(location) {
+            return { type: 'NAVIGATE_TO', location: location};
+        }
+
         AppStore.actions = {
             showSpinner,
             setLoadedList,
             clearLoadedList,
             loadList,
             clearList,
-            locationChanged
+            locationChanged,
+            navigateTo
         }
 
     }());

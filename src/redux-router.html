@@ -6,11 +6,13 @@
 <dom-module id="redux-router">
     <template>
         <app-location
+                id="location"
                 route="{{route}}"
                 url-space-regex="^[[rootPath]]">
         </app-location>
 
         <app-route
+                active="{{isActive}}"
                 route="{{route}}"
                 pattern="[[rootPath]]:page"
                 data="{{routeData}}"
@@ -30,7 +32,10 @@
             static get is() { return 'redux-router'; }
             static get properties() {
                 return {
-                    page: String,
+                    page: {
+                        type: String,
+                        value: 'view1'
+                    },
                     id: String,
                     subroute: {
                         type: String
@@ -45,6 +50,11 @@
                     // This shouldn't be neccessary, but the Analyzer isn't picking up
                     // Polymer.Element#rootPath
                     rootPath: String,
+                    nextLocation: {
+                        type: Object,
+                        statePath: 'nextLocation',
+                        observer: 'navigateTo'
+                    }
                 };
             }
 
@@ -52,6 +62,19 @@
                 return [
                     '_routePageChanged(routeData.page, subrouteData.id)',
                 ];
+            }
+
+            navigateTo(location) {
+                let path = this.rootPath;
+                if (location.id) {
+                    path = '/' + location.page + '/' + location.id;
+                } else if (location.page) {
+                    path = '/' + location.page;
+                } else {
+                    return;
+                }
+                window.history.pushState({}, null, path);
+                window.dispatchEvent(new CustomEvent('location-changed'));
             }
 
             _routePageChanged(page, id) {

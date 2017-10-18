@@ -29,6 +29,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <p>Uses Redux Saga to set loading state (show progress bar in toolbar) wait for a second and set a fake result set</p>
       <paper-button raised on-tap="loadList">Load List</paper-button>
       <paper-button raised on-tap="clearList">Clear List</paper-button>
+        <paper-button raised on-tap="navigate">Go to view 3</paper-button>
       <div>
         <h3>Loaded List</h3>
         <ul>
@@ -59,6 +60,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         clearList() {
           this.dispatch(AppStore.actions.clearList());
+        }
+
+        navigate() {
+            this.dispatch(AppStore.actions.navigateTo({page: 'view3'}));
         }
     }
 

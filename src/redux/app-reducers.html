@@ -9,9 +9,8 @@
                     return true;
                 case 'LOADING_DONE':
                     return false;
-                default:
-                    return state;
             }
+            return state;
         }
 
         function loadedList(state = [], action) {
@@ -20,14 +19,21 @@
                     return action.result;
                 case 'CLEAR_LOADED_LIST':
                     return [];
-                default:
-                    return state;
             }
+            return state;
         }
 
-        function location(state = {}, action) {
+        function location(state = {page: "view1"}, action) {
             switch (action.type) {
                 case 'LOCATION_CHANGED':
+                    return action.location;
+            }
+            return state;
+        }
+
+        function nextLocation(state = {}, action) {
+            switch (action.type) {
+                case 'NAVIGATE_TO':
                     return action.location;
             }
             return state;
@@ -36,7 +42,8 @@
         AppStore.rootReducer = Redux.combineReducers({
             showLoadingSpinner,
             loadedList,
-            location
+            location,
+            nextLocation
         })
 
     }());
