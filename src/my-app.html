@@ -158,8 +158,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             }
 
             _showPage404() {
-                // TODO: Must be reworked into an Action -> goToLocation
-                //this.page = 'view404';
                 this.dispatch(AppStore.actions.navigateTo({page: 'view404'}));
             }
         }
