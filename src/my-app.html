@@ -21,6 +21,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/iron-selector/iron-selector.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../bower_components/paper-progress/paper-progress.html">
+<link rel="import" href="../bower_components/polymerfire/polymerfire.html">
 <link rel="import" href="my-icons.html">
 <link rel="import" href="redux/app-store.html">
 <link rel="import" href="redux-router.html">
@@ -77,6 +78,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 --paper-progress-container-color: transparent;
             }
         </style>
+
+        <firebase-app
+                auth-domain="pofiresa.firebaseapp.com"
+                database-url="https://pofiresa.firebaseio.com/"
+                api-key="AIzaSyDKa7_h0sI5YO4UAnmFfSc3cKk-tmFieIw"
+                storage-bucket=""
+                messaging-sender-id="611982670857">
+        </firebase-app>
 
         <redux-router></redux-router>
 

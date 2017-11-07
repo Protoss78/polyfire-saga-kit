@@ -9,31 +9,106 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 -->
 
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="redux/app-store.html">
 <link rel="import" href="shared-styles.html">
 
 <dom-module id="my-view2">
-  <template>
-    <style include="shared-styles">
-      :host {
-        display: block;
+    <template>
+        <style include="shared-styles">
+            :host {
+                display: block;
 
-        padding: 10px;
-      }
-    </style>
+                padding: 10px;
+            }
+        </style>
 
-    <div class="card">
-      <div class="circle">2</div>
-      <h1>View Two</h1>
-      <p>Ea duis bonorum nec, falli paulo aliquid ei eum.</p>
-      <p>Id nam odio natum malorum, tibique copiosae expetenda mel ea.Detracto suavitate repudiandae no eum. Id adhuc minim soluta nam.Id nam odio natum malorum, tibique copiosae expetenda mel ea.</p>
-    </div>
-  </template>
+        <firebase-query
+                id="query"
+                path="{{url}}"
+                data="{{data}}">
+        </firebase-query>
 
-  <script>
-    class MyView2 extends Polymer.Element {
-      static get is() { return 'my-view2'; }
-    }
+        <div class="card">
+            <div class="circle">2</div>
+            <h1>View Two</h1>
+            <p>Load the list via Firebase query as soon as the page is opened.</p>
+            <paper-button raised on-tap="refresh">Load List</paper-button>
+            <div>
+                <h3>Loaded List</h3>
+                <ul>
+                    <template is="dom-repeat" items="{{data}}">
+                        <li>[[item.name]]</li>
+                    </template>
+                </ul>
+            </div>
+        </div>
+    </template>
 
-    window.customElements.define(MyView2.is, MyView2);
-  </script>
+    <script>
+        class MyView2 extends AppStore.ReduxMixin(Polymer.Element) {
+            static get is() {
+                return 'my-view2';
+            }
+
+            static get properties() {
+                return {
+                    location: {
+                        type: Object,
+                        statePath: 'location',
+                        observer: '_locationChanged'
+                    },
+                    queryUrl: {
+                        type: String,
+                        statePath: 'queryUrl',
+                        observer: '_queryUrlChanged'
+                    },
+                    url: {
+                        type: String,
+                        value: ''
+                    },
+                    data: {
+                        type: Array,
+                        observer: '_dataChanged'
+                    }
+                };
+            }
+
+            static get page() {
+                return this.is.replace('my-', '');
+            }
+
+            isActivePage() {
+                return (this.location.page === this.constructor.page);
+            }
+
+            _locationChanged(location) {
+                if (!location || !location.page) {
+                    return;
+                }
+                if (location.page === this.constructor.page) {
+                    this.refresh();
+                }
+            }
+
+            _queryUrlChanged(queryUrl) {
+                if (!this.isActivePage()) {
+                    this.url = '';
+                    return;
+                }
+                this.url = queryUrl;
+            }
+
+            _dataChanged(data) {
+                this.dispatch(AppStore.actions.finalizeLoadClubs(data));
+            }
+
+
+            refresh() {
+                this.dispatch(AppStore.actions.loadClubs());
+            }
+        }
+
+        window.customElements.define(MyView2.is, MyView2);
+    </script>
 </dom-module>

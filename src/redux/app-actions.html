@@ -34,6 +34,31 @@
             return { type: 'LOAD_LIST'};
         }
 
+        function loadClubs() {
+            return { type: 'LOAD_CLUBS'};
+        }
+
+        function finalizeLoadClubs(clubs) {
+            return {
+                type: 'FINALIZE_LOAD_CLUBS',
+                clubs: clubs
+            };
+        }
+
+        function setClubList(clubs) {
+            return {
+                type: 'SET_CLUB_LIST',
+                clubs: clubs
+            };
+        }
+
+        function setQueryUrl(queryUrl) {
+            return {
+                type: 'SET_QUERY_URL',
+                queryUrl: queryUrl
+            };
+        }
+
         function clearList() {
             return { type: 'CLEAR_LIST'};
         }
@@ -49,7 +74,11 @@
             loadList,
             clearList,
             locationChanged,
-            navigateTo
+            navigateTo,
+            loadClubs,
+            setClubList,
+            setQueryUrl,
+            finalizeLoadClubs
         }
 
     }());

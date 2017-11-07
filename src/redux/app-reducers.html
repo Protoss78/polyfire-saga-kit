@@ -39,11 +39,29 @@
             return state;
         }
 
+        function clubs(state = {}, action) {
+            switch (action.type) {
+                case 'SET_CLUB_LIST':
+                    return action.clubs;
+            }
+            return state;
+        }
+
+        function queryUrl(state = {}, action) {
+            switch (action.type) {
+                case 'SET_QUERY_URL':
+                    return action.queryUrl;
+            }
+            return state;
+        }
+
         AppStore.rootReducer = Redux.combineReducers({
             showLoadingSpinner,
             loadedList,
             location,
-            nextLocation
+            nextLocation,
+            clubs,
+            queryUrl
         })
 
     }());

@@ -22,8 +22,8 @@ Mainly because I'm teaching myself on the way and got inspiration from various b
 - [x] Implement a fake loading mechanism (bind state via polymer-redux)
 - [x] Integrate app-router with redux and add location to store
 - [x] Implement a generic navigation action
-- [ ] Integrate Firebase via Polymerfire
-- [ ] Implement Firebase Query and display results (use redux-saga)
+- [x] Integrate Firebase via Polymerfire
+- [x] Implement Firebase Query and display results (use redux-saga)
 - [ ] Simple edit screen that uses Firebase Document
 - [ ] Add Firebase authentication and add user to redux-store
 - [ ] Add internationalization support

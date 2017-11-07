@@ -27,6 +27,29 @@
             yield effects.put(MyApp.actions.showSpinner(false));
         }
 
+        function* loadClubs(action) {
+            try {
+                yield effects.put(MyApp.actions.showSpinner(true));
+                yield effects.put(MyApp.actions.setQueryUrl(''));
+                yield effects.put(MyApp.actions.setQueryUrl('/clubs'));
+            } catch (e) {
+                console.log(e);
+                yield effects.put(MyApp.actions.setQueryUrl(null));
+                yield effects.put(MyApp.actions.showSpinner(false));
+            }
+        }
+
+        function* finalizeLoadClubs(action) {
+            try {
+                yield effects.put(MyApp.actions.setClubList(action.clubs));
+                yield effects.put(MyApp.actions.showSpinner(false));
+            } catch (e) {
+                console.log(e);
+                yield effects.put(MyApp.actions.setClubList(null));
+                yield effects.put(MyApp.actions.showSpinner(false));
+            }
+        }
+
         /*
           Starts fetchUser on each dispatched `USER_FETCH_REQUESTED` action.
           Allows concurrent fetches of user.
@@ -34,6 +57,8 @@
         function* rootSaga() {
             yield effects.takeEvery('LOAD_LIST', loadList);
             yield effects.takeEvery('CLEAR_LIST', clearList);
+            yield effects.takeEvery('LOAD_CLUBS', loadClubs);
+            yield effects.takeEvery('FINALIZE_LOAD_CLUBS', finalizeLoadClubs);
         }
 
 
