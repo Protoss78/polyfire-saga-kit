@@ -61,6 +61,7 @@
             try {
                 yield effects.put(MyApp.actions.showSpinner(true));
                 yield effects.put(MyApp.actions.setId(action.id));
+                yield effects.put(MyApp.actions.setEditUrl(''));
                 yield effects.put(MyApp.actions.setEditUrl('/clubs/' + action.id));
                 yield effects.put(MyApp.actions.navigateTo({page: 'editor', id: action.id}));
             } catch (e) {
@@ -74,6 +75,7 @@
             try {
                 yield effects.put(MyApp.actions.showSpinner(true));
                 yield effects.put(MyApp.actions.setId(action.id));
+                yield effects.put(MyApp.actions.setEditUrl(''));
                 yield effects.put(MyApp.actions.setEditUrl('/clubs/' + action.id));
                 yield effects.put(MyApp.actions.navigateTo({page: 'club', id: action.id}));
             } catch (e) {

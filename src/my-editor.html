@@ -33,8 +33,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <div class="card">
             <h1>[[_data.name]]</h1>
             <div>Please be aware that changes will be saved immediately. No need for a Save button here.</div>
-            <paper-input label="Name">{{_data.name}}</paper-input>
-            <paper-input label="Description">{{_data.description}}</paper-input>
+            <paper-input label="Name" value="{{_data.name}}"></paper-input>
+            <paper-input label="Description" value="{{_data.description}}"></paper-input>
         </div>
     </template>
 
@@ -70,7 +70,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                         value: ''
                     },
                     _data: {
-                        type: Array,
+                        type: Object,
                         observer: '_dataChanged'
                     }
                 };

@@ -10,6 +10,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/paper-card/paper-card.html">
 <link rel="import" href="../bower_components/polymerfire/firebase-query.html">
 <link rel="import" href="redux/app-store.html">
 <link rel="import" href="shared-styles.html">
@@ -34,14 +35,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             <div class="circle">2</div>
             <h1>View Two</h1>
             <p>Load the list via Firebase query as soon as the page is opened.</p>
-            <paper-button raised on-tap="refresh">Load List</paper-button>
+            <paper-button raised on-click="refresh">Load List</paper-button>
             <div>
                 <h3>Loaded List</h3>
-                <ul>
-                    <template is="dom-repeat" items="{{_data}}">
-                        <li>[[item.name]]</li>
-                    </template>
-                </ul>
+                <template is="dom-repeat" items="{{_data}}">
+                    <paper-card heading="[[item.name]]">
+                        <div class="card-content">[[item.description]]</div>
+                        <div class="card-actions">
+                            <paper-button raised on-click="editClub">Edit</paper-button>
+                            <paper-button raised on-click="displayClub">Display</paper-button>
+                        </div>
+                    </paper-card>
+                </template>
             </div>
         </div>
     </template>
@@ -111,6 +116,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             refresh() {
                 // Signal to start the list load
                 this.dispatch(AppStore.actions.loadClubs());
+            }
+
+            editClub(e) {
+                this.dispatch(AppStore.actions.editClub(e.model.item.$key));
+            }
+
+            displayClub(e) {
+                this.dispatch(AppStore.actions.displayClub(e.model.item.$key));
             }
         }
 

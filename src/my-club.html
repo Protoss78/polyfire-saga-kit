@@ -68,7 +68,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                         value: ''
                     },
                     _data: {
-                        type: Array,
+                        type: Object,
                         observer: '_dataChanged'
                     }
                 };
@@ -109,7 +109,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
             refresh() {
                 // Signal to load the document
-                this.dispatch(AppStore.actions.editClub(this.id));
+                this.dispatch(AppStore.actions.displayClub(this.id));
             }
         }
 
