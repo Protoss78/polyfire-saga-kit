@@ -11,6 +11,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../bower_components/polymerfire/firebase-document.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="redux/app-store.html">
 <link rel="import" href="shared-styles.html">
 
@@ -31,7 +32,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         </firebase-document>
 
         <div class="card">
-            <h1>[[_data.name]]</h1>
+            <div class="circle">E</div>
+            <h1><paper-icon-button icon="my-icons:arrow-back" on-click="goBack"></paper-icon-button>[[_data.name]]</h1>
             <div>Please be aware that changes will be saved immediately. No need for a Save button here.</div>
             <paper-input label="Name" value="{{_data.name}}"></paper-input>
             <paper-input label="Description" value="{{_data.description}}"></paper-input>
@@ -112,6 +114,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             refresh() {
                 // Signal to load the document
                 this.dispatch(AppStore.actions.editClub(this.location.id));
+            }
+
+            goBack() {
+                this.dispatch(AppStore.actions.navigateTo({page: 'view2'}));
             }
         }
 
