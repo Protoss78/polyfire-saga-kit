@@ -5,6 +5,13 @@
     "src/my-view1.html",
     "src/my-view2.html",
     "src/my-view3.html",
+    "src/my-editor.html",
+    "src/my-club.html",
+    "src/redux-router.html",
+    "src/redux/app-actions.html",
+    "src/redux/app-reducers.html",
+    "src/redux/app-sagas.html",
+    "src/redux/app-store.html",
     "src/my-view404.html"
   ],
   "sources": [
@@ -20,7 +27,7 @@
   },
   "builds": [
     {
-      "preset": "es6-unbundled"
+      "preset": "es6-bundled"
     }
   ]
 }
