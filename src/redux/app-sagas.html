@@ -57,6 +57,43 @@
             }
         }
 
+        function* editClub(action) {
+            try {
+                yield effects.put(MyApp.actions.showSpinner(true));
+                yield effects.put(MyApp.actions.setId(action.id));
+                yield effects.put(MyApp.actions.setEditUrl('/clubs/' + action.id));
+                yield effects.put(MyApp.actions.navigateTo({page: 'editor', id: action.id}));
+            } catch (e) {
+                console.log(e);
+                yield effects.put(MyApp.actions.setEditUrl(null));
+                yield effects.put(MyApp.actions.showSpinner(false));
+            }
+        }
+
+        function* displayClub(action) {
+            try {
+                yield effects.put(MyApp.actions.showSpinner(true));
+                yield effects.put(MyApp.actions.setId(action.id));
+                yield effects.put(MyApp.actions.setEditUrl('/clubs/' + action.id));
+                yield effects.put(MyApp.actions.navigateTo({page: 'club', id: action.id}));
+            } catch (e) {
+                console.log(e);
+                yield effects.put(MyApp.actions.setEditUrl(null));
+                yield effects.put(MyApp.actions.showSpinner(false));
+            }
+        }
+
+        function* clubLoaded(action) {
+            try {
+                yield effects.put(MyApp.actions.setClub(action.club));
+                yield effects.put(MyApp.actions.showSpinner(false));
+            } catch (e) {
+                console.log(e);
+                yield effects.put(MyApp.actions.setClub(null));
+                yield effects.put(MyApp.actions.showSpinner(false));
+            }
+        }
+
         /*
           Starts loadList on each dispatched `LOAD_LIST` action.
           Allows concurrent fetches of list loads.
@@ -67,6 +104,9 @@
             yield effects.takeEvery('CLEAR_LIST', clearList);
             yield effects.takeEvery('LOAD_CLUBS', loadClubs);
             yield effects.takeEvery('FINALIZE_LOAD_CLUBS', finalizeLoadClubs);
+            yield effects.takeEvery('EDIT_CLUB', editClub);
+            yield effects.takeEvery('DISPLAY_CLUB', displayClub);
+            yield effects.takeEvery('FINALIZE_CLUB_LOAD', clubLoaded);
         }
 
 

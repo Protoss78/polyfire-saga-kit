@@ -1,7 +1,7 @@
 <script>
     var AppStore = {};
 
-    (function() {
+    (function () {
 
         function showSpinner(doShowSpinner) {
             if (doShowSpinner) {
@@ -31,11 +31,11 @@
         }
 
         function loadList() {
-            return { type: 'LOAD_LIST'};
+            return {type: 'LOAD_LIST'};
         }
 
         function loadClubs() {
-            return { type: 'LOAD_CLUBS'};
+            return {type: 'LOAD_CLUBS'};
         }
 
         function finalizeLoadClubs(clubs) {
@@ -59,12 +59,55 @@
             };
         }
 
+        function setEditUrl(editUrl) {
+            return {
+                type: 'SET_EDIT_URL',
+                editUrl: editUrl
+            };
+        }
+
         function clearList() {
-            return { type: 'CLEAR_LIST'};
+            return {type: 'CLEAR_LIST'};
         }
 
         function navigateTo(location) {
-            return { type: 'NAVIGATE_TO', location: location};
+            return {type: 'NAVIGATE_TO', location: location};
+        }
+
+        function setId(id) {
+            return {type: 'SET_CLUB_ID', id: id};
+        }
+
+        function setEditMode(editMode) {
+            return {type: 'SET_EDIT_MODE', editMode: editMode};
+        }
+
+        function editClub(id) {
+            return {
+                type: 'EDIT_CLUB',
+                id: id
+            };
+        }
+
+        function displayClub(id) {
+            return {
+                type: 'DISPLAY_CLUB',
+                id: id
+            };
+        }
+
+        function setClub(club) {
+            return {
+                type: 'SET_CLUB',
+                club: club
+            };
+        }
+
+        function finalizeClubLoad(club) {
+            return {
+                type: 'FINALIZE_CLUB_LOAD',
+                club: club
+            };
         }
 
         AppStore.actions = {
@@ -78,7 +121,13 @@
             loadClubs,
             setClubList,
             setQueryUrl,
-            finalizeLoadClubs
+            finalizeLoadClubs,
+            displayClub,
+            editClub,
+            setId,
+            setEditUrl,
+            setClub,
+            finalizeClubLoad
         }
 
     }());

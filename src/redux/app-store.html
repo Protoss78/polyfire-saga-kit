@@ -9,7 +9,7 @@
 
 <script>
 
-    (function() {
+    (function () {
 
         const composeEnhancers = typeof window === 'object' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
             ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({})
@@ -21,7 +21,7 @@
 
         const enhancer = composeEnhancers(
             Redux.applyMiddleware(sagaMiddleware),
-            );
+        );
 
         const store = Redux.createStore(AppStore.rootReducer, enhancer);
         sagaMiddleware.run(AppStore.rootSaga);
