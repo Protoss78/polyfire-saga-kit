@@ -86,12 +86,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 if (!location || !location.page) {
                     return;
                 }
+                // Automatically refresh the list when this view is currently active
                 if (location.page === this.constructor.page) {
                     this.refresh();
                 }
             }
 
+            // Called whenever the query URL changed
             _queryUrlChanged(queryUrl) {
+                // Set URL to blank when we are not active to trigger reload when activated the next time
                 if (!this.isActivePage()) {
                     this.url = '';
                     return;
@@ -100,11 +103,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             }
 
             _dataChanged(data) {
+                // Signal that the list load is complete
                 this.dispatch(AppStore.actions.finalizeLoadClubs(data));
             }
 
-
             refresh() {
+                // Signal to start the list load
                 this.dispatch(AppStore.actions.loadClubs());
             }
         }
