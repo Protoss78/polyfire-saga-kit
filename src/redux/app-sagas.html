@@ -61,9 +61,10 @@
             try {
                 yield effects.put(MyApp.actions.showSpinner(true));
                 yield effects.put(MyApp.actions.setId(action.id));
+                // Query URL has to be set to blank first, to force a reload even when we set it back to the same value
+                // TODO: Find a better solution for this
                 yield effects.put(MyApp.actions.setEditUrl(''));
                 yield effects.put(MyApp.actions.setEditUrl('/clubs/' + action.id));
-                yield effects.put(MyApp.actions.navigateTo({page: 'editor', id: action.id}));
             } catch (e) {
                 console.log(e);
                 yield effects.put(MyApp.actions.setEditUrl(null));
@@ -75,9 +76,10 @@
             try {
                 yield effects.put(MyApp.actions.showSpinner(true));
                 yield effects.put(MyApp.actions.setId(action.id));
+                // Query URL has to be set to blank first, to force a reload even when we set it back to the same value
+                // TODO: Find a better solution for this
                 yield effects.put(MyApp.actions.setEditUrl(''));
                 yield effects.put(MyApp.actions.setEditUrl('/clubs/' + action.id));
-                yield effects.put(MyApp.actions.navigateTo({page: 'club', id: action.id}));
             } catch (e) {
                 console.log(e);
                 yield effects.put(MyApp.actions.setEditUrl(null));
@@ -110,7 +112,6 @@
             yield effects.takeEvery('DISPLAY_CLUB', displayClub);
             yield effects.takeEvery('FINALIZE_CLUB_LOAD', clubLoaded);
         }
-
 
         AppStore.rootSaga = rootSaga;
 

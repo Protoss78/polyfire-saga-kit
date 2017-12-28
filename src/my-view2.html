@@ -119,11 +119,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             }
 
             editClub(e) {
-                this.dispatch(AppStore.actions.editClub(e.model.item.$key));
+                this.dispatch(AppStore.actions.navigateTo({page: 'editor', id: e.model.item.$key}));
             }
 
             displayClub(e) {
-                this.dispatch(AppStore.actions.displayClub(e.model.item.$key));
+                this.dispatch(AppStore.actions.navigateTo({page: 'club', id: e.model.item.$key}));
             }
         }
 
