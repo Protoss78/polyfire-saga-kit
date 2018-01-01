@@ -5,11 +5,12 @@
     (function() {
         const effects = ReduxSaga.effects;
 
-        // worker Saga: will be fired on USER_FETCH_REQUESTED actions
+        // worker Saga: will be fired on LOAD_LIST actions
         function* loadList(action) {
             try {
                 yield effects.put(MyApp.actions.showSpinner(true));
                 let result = [1, 2, 3, 4, 5];
+                // Artificial to delay to simulate a REST call like behavior
                 yield ReduxSaga.delay(1000);
                 yield effects.put(MyApp.actions.setLoadedList(result));
                 yield effects.put(MyApp.actions.showSpinner(false));
@@ -20,16 +21,21 @@
             }
         }
 
+        // worker Saga: will be fired on CLEAR_LIST actions
         function* clearList(action) {
             yield effects.put(MyApp.actions.showSpinner(true));
+            // Artificial to delay to simulate a REST call like behavior
             yield ReduxSaga.delay(1000);
             yield effects.put(MyApp.actions.clearLoadedList());
             yield effects.put(MyApp.actions.showSpinner(false));
         }
 
+        // worker Saga: will be fired on CLEAR_LIST actions
         function* loadClubs(action) {
             try {
                 yield effects.put(MyApp.actions.showSpinner(true));
+                // Query URL has to be set to blank first, to force a reload even when we set it back to the same value
+                // TODO: Find a better solution for this
                 yield effects.put(MyApp.actions.setQueryUrl(''));
                 yield effects.put(MyApp.actions.setQueryUrl('/clubs'));
             } catch (e) {
@@ -39,6 +45,7 @@
             }
         }
 
+        // worker Saga: will be fired on FINALIZE_LOAD_CLUBS actions
         function* finalizeLoadClubs(action) {
             try {
                 yield effects.put(MyApp.actions.setClubList(action.clubs));
@@ -50,17 +57,61 @@
             }
         }
 
+        function* editClub(action) {
+            try {
+                yield effects.put(MyApp.actions.showSpinner(true));
+                yield effects.put(MyApp.actions.setId(action.id));
+                // Query URL has to be set to blank first, to force a reload even when we set it back to the same value
+                // TODO: Find a better solution for this
+                yield effects.put(MyApp.actions.setEditUrl(''));
+                yield effects.put(MyApp.actions.setEditUrl('/clubs/' + action.id));
+            } catch (e) {
+                console.log(e);
+                yield effects.put(MyApp.actions.setEditUrl(null));
+                yield effects.put(MyApp.actions.showSpinner(false));
+            }
+        }
+
+        function* displayClub(action) {
+            try {
+                yield effects.put(MyApp.actions.showSpinner(true));
+                yield effects.put(MyApp.actions.setId(action.id));
+                // Query URL has to be set to blank first, to force a reload even when we set it back to the same value
+                // TODO: Find a better solution for this
+                yield effects.put(MyApp.actions.setEditUrl(''));
+                yield effects.put(MyApp.actions.setEditUrl('/clubs/' + action.id));
+            } catch (e) {
+                console.log(e);
+                yield effects.put(MyApp.actions.setEditUrl(null));
+                yield effects.put(MyApp.actions.showSpinner(false));
+            }
+        }
+
+        function* clubLoaded(action) {
+            try {
+                yield effects.put(MyApp.actions.setClub(action.club));
+                yield effects.put(MyApp.actions.showSpinner(false));
+            } catch (e) {
+                console.log(e);
+                yield effects.put(MyApp.actions.setClub(null));
+                yield effects.put(MyApp.actions.showSpinner(false));
+            }
+        }
+
         /*
-          Starts fetchUser on each dispatched `USER_FETCH_REQUESTED` action.
-          Allows concurrent fetches of user.
+          Starts loadList on each dispatched `LOAD_LIST` action.
+          Allows concurrent fetches of list loads.
+          The same is true for all other actions
         */
         function* rootSaga() {
             yield effects.takeEvery('LOAD_LIST', loadList);
             yield effects.takeEvery('CLEAR_LIST', clearList);
             yield effects.takeEvery('LOAD_CLUBS', loadClubs);
             yield effects.takeEvery('FINALIZE_LOAD_CLUBS', finalizeLoadClubs);
+            yield effects.takeEvery('EDIT_CLUB', editClub);
+            yield effects.takeEvery('DISPLAY_CLUB', displayClub);
+            yield effects.takeEvery('FINALIZE_CLUB_LOAD', clubLoaded);
         }
-
 
         AppStore.rootSaga = rootSaga;
 

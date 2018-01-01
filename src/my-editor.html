@@ -9,13 +9,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 -->
 
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
-<link rel="import" href="../bower_components/paper-button/paper-button.html">
-<link rel="import" href="../bower_components/paper-card/paper-card.html">
-<link rel="import" href="../bower_components/polymerfire/firebase-query.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/polymerfire/firebase-document.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="redux/app-store.html">
 <link rel="import" href="shared-styles.html">
 
-<dom-module id="my-view2">
+<dom-module id="my-editor">
     <template>
         <style include="shared-styles">
             :host {
@@ -25,36 +25,25 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             }
         </style>
 
-        <firebase-query
-                id="query"
+        <firebase-document
+                id="document"
                 path="{{_url}}"
                 data="{{_data}}">
-        </firebase-query>
+        </firebase-document>
 
         <div class="card">
-            <div class="circle">2</div>
-            <h1>View Two</h1>
-            <p>Load the list via Firebase query as soon as the page is opened.</p>
-            <paper-button raised on-click="refresh">Load List</paper-button>
-            <div>
-                <h3>Loaded List</h3>
-                <template is="dom-repeat" items="{{_data}}">
-                    <paper-card heading="[[item.name]]">
-                        <div class="card-content">[[item.description]]</div>
-                        <div class="card-actions">
-                            <paper-button raised on-click="editClub">Edit</paper-button>
-                            <paper-button raised on-click="displayClub">Display</paper-button>
-                        </div>
-                    </paper-card>
-                </template>
-            </div>
+            <div class="circle">E</div>
+            <h1><paper-icon-button icon="my-icons:arrow-back" on-click="goBack"></paper-icon-button>[[_data.name]]</h1>
+            <div>Please be aware that changes will be saved immediately. No need for a Save button here.</div>
+            <paper-input label="Name" value="{{_data.name}}"></paper-input>
+            <paper-input label="Description" value="{{_data.description}}"></paper-input>
         </div>
     </template>
 
     <script>
-        class MyView2 extends AppStore.ReduxMixin(Polymer.Element) {
+        class MyEditor extends AppStore.ReduxMixin(Polymer.Element) {
             static get is() {
-                return 'my-view2';
+                return 'my-editor';
             }
 
             static get properties() {
@@ -64,17 +53,26 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                         statePath: 'location',
                         observer: '_locationChanged'
                     },
-                    queryUrl: {
+                    editUrl: {
                         type: String,
-                        statePath: 'queryUrl',
-                        observer: '_queryUrlChanged'
+                        statePath: 'editUrl',
+                        observer: '_editUrlChanged'
+                    },
+                    editMode: {
+                        type: String,
+                        statePath: 'editMode',
+                        observer: '_editModeChanged'
+                    },
+                    id: {
+                        type: String,
+                        statePath: 'id'
                     },
                     _url: {
                         type: String,
                         value: ''
                     },
                     _data: {
-                        type: Array,
+                        type: Object,
                         observer: '_dataChanged'
                     }
                 };
@@ -98,35 +96,31 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 }
             }
 
-            // Called whenever the query URL changed
-            _queryUrlChanged(queryUrl) {
+            // Called whenever the edit URL changed
+            _editUrlChanged(editUrl) {
                 // Set URL to blank when we are not active to trigger reload when activated the next time
                 if (!this.isActivePage()) {
                     this._url = '';
                     return;
                 }
-                this._url = queryUrl;
+                this._url = editUrl;
             }
 
             _dataChanged(_data) {
-                // Signal that the list load is complete
-                this.dispatch(AppStore.actions.finalizeLoadClubs(_data));
+                // Signal that the document was successfully loaded
+                this.dispatch(AppStore.actions.finalizeClubLoad(_data));
             }
 
             refresh() {
-                // Signal to start the list load
-                this.dispatch(AppStore.actions.loadClubs());
+                // Signal to load the document
+                this.dispatch(AppStore.actions.editClub(this.location.id));
             }
 
-            editClub(e) {
-                this.dispatch(AppStore.actions.navigateTo({page: 'editor', id: e.model.item.$key}));
-            }
-
-            displayClub(e) {
-                this.dispatch(AppStore.actions.navigateTo({page: 'club', id: e.model.item.$key}));
+            goBack() {
+                this.dispatch(AppStore.actions.navigateTo({page: 'view2'}));
             }
         }
 
-        window.customElements.define(MyView2.is, MyView2);
+        window.customElements.define(MyEditor.is, MyEditor);
     </script>
 </dom-module>

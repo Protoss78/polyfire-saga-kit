@@ -55,13 +55,40 @@
             return state;
         }
 
+        function id(state={}, action) {
+            switch (action.type) {
+                case 'SET_CLUB_ID':
+                    return action.id;
+            }
+            return state;
+        }
+
+        function editUrl(state = {}, action) {
+            switch (action.type) {
+                case 'SET_EDIT_URL':
+                    return action.editUrl;
+            }
+            return state;
+        }
+
+        function club(state = {}, action) {
+            switch (action.type) {
+                case 'SET_CLUB':
+                    return action.club;
+            }
+            return state;
+        }
+
         AppStore.rootReducer = Redux.combineReducers({
             showLoadingSpinner,
             loadedList,
             location,
             nextLocation,
             clubs,
-            queryUrl
+            queryUrl,
+            id,
+            editUrl,
+            club
         })
 
     }());
