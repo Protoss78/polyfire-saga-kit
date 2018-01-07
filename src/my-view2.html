@@ -11,17 +11,24 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../bower_components/paper-fab/paper-fab.html">
 <link rel="import" href="../bower_components/polymerfire/firebase-query.html">
 <link rel="import" href="redux/app-store.html">
 <link rel="import" href="shared-styles.html">
+<link rel="import" href="my-icons.html">
 
 <dom-module id="my-view2">
     <template>
         <style include="shared-styles">
             :host {
                 display: block;
-
                 padding: 10px;
+            }
+
+            paper-fab {
+                position: fixed;
+                right: 1.5em;
+                bottom: 1em;
             }
         </style>
 
@@ -42,13 +49,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     <paper-card heading="[[item.name]]">
                         <div class="card-content">[[item.description]]</div>
                         <div class="card-actions">
-                            <paper-button raised on-click="editClub">Edit</paper-button>
-                            <paper-button raised on-click="displayClub">Display</paper-button>
+                            <paper-button on-click="editClub">Edit</paper-button>
+                            <paper-button on-click="displayClub">Display</paper-button>
                         </div>
                     </paper-card>
                 </template>
             </div>
         </div>
+        <paper-fab icon="my-icons:add" on-click="createClub"></paper-fab>
     </template>
 
     <script>
@@ -124,6 +132,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
             displayClub(e) {
                 this.dispatch(AppStore.actions.navigateTo({page: 'club', id: e.model.item.$key}));
+            }
+
+            createClub() {
+                this.dispatch(AppStore.actions.navigateTo({page: 'editor', id: null}));
             }
         }
 

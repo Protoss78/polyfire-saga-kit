@@ -106,6 +106,10 @@
             };
         }
 
+        function createClub() {
+            return {type: 'CREATE_CLUB'};
+        }
+
         AppStore.actions = {
             showSpinner,
             setLoadedList,
@@ -123,7 +127,8 @@
             setId,
             setEditUrl,
             setClub,
-            finalizeClubLoad
+            finalizeClubLoad,
+            createClub
         }
 
     }());

@@ -98,6 +98,20 @@
             }
         }
 
+        function* createClub(action) {
+            try {
+                yield effects.put(MyApp.actions.setId(null));
+                // Query URL has to be set to blank first, to force a reload even when we set it back to the same value
+                // TODO: Find a better solution for this
+                yield effects.put(MyApp.actions.setEditUrl(''));
+                yield effects.put(MyApp.actions.setEditUrl('/clubs'));
+            } catch (e) {
+                console.log(e);
+                yield effects.put(MyApp.actions.setEditUrl(null));
+                yield effects.put(MyApp.actions.showSpinner(false));
+            }
+        }
+
         /*
           Starts loadList on each dispatched `LOAD_LIST` action.
           Allows concurrent fetches of list loads.
@@ -111,6 +125,7 @@
             yield effects.takeEvery('EDIT_CLUB', editClub);
             yield effects.takeEvery('DISPLAY_CLUB', displayClub);
             yield effects.takeEvery('FINALIZE_CLUB_LOAD', clubLoaded);
+            yield effects.takeEvery('CREATE_CLUB', createClub);
         }
 
         AppStore.rootSaga = rootSaga;

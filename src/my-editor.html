@@ -12,6 +12,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../bower_components/polymerfire/firebase-document.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../bower_components/paper-card/paper-card.html">
 <link rel="import" href="redux/app-store.html">
 <link rel="import" href="shared-styles.html">
 
@@ -20,8 +21,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <style include="shared-styles">
             :host {
                 display: block;
-
                 padding: 10px;
+            }
+
+            .flexbox {
+                display: flex;
+            }
+
+            .spacer {
+                flex: 1;
             }
         </style>
 
@@ -31,13 +39,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 data="{{_data}}">
         </firebase-document>
 
-        <div class="card">
-            <div class="circle">E</div>
-            <h1><paper-icon-button icon="my-icons:arrow-back" on-click="goBack"></paper-icon-button>[[_data.name]]</h1>
-            <div>Please be aware that changes will be saved immediately. No need for a Save button here.</div>
-            <paper-input label="Name" value="{{_data.name}}"></paper-input>
-            <paper-input label="Description" value="{{_data.description}}"></paper-input>
-        </div>
+        <paper-card heading="[[_editData.name]]">
+            <div class="card-content">
+                <paper-input label="Name" value="{{_editData.name}}"></paper-input>
+                <paper-input label="Description" value="{{_editData.description}}"></paper-input>
+            </div>
+            <div class="card-actions flexbox">
+                <paper-icon-button icon="my-icons:arrow-back" on-click="goBack"></paper-icon-button>
+                <div class="spacer"></div>
+                <paper-icon-button icon="my-icons:check" on-click="doSave"></paper-icon-button>
+            </div>
+        </paper-card>
     </template>
 
     <script>
@@ -58,10 +70,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                         statePath: 'editUrl',
                         observer: '_editUrlChanged'
                     },
-                    editMode: {
-                        type: String,
-                        statePath: 'editMode',
-                        observer: '_editModeChanged'
+                    _editData: {
+                        type: Object
                     },
                     id: {
                         type: String,
@@ -74,6 +84,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     _data: {
                         type: Object,
                         observer: '_dataChanged'
+                    },
+                    _mode: {
+                        type: String,
+                        value: 'edit'
                     }
                 };
             }
@@ -103,21 +117,56 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     this._url = '';
                     return;
                 }
-                this._url = editUrl;
+                if (editUrl.indexOf('/undefined') > -1) {
+                    this._url = '/clubs';
+                } else {
+                    this._url = editUrl;
+                }
             }
 
             _dataChanged(_data) {
+                this._editData = Object.assign({}, _data);
                 // Signal that the document was successfully loaded
-                this.dispatch(AppStore.actions.finalizeClubLoad(_data));
+                // Ignore it when we are saving -> then the url is null
+                if (this._url) {
+                    this.dispatch(AppStore.actions.finalizeClubLoad(_data));
+                }
             }
 
             refresh() {
-                // Signal to load the document
-                this.dispatch(AppStore.actions.editClub(this.location.id));
+                // Check if we have an id to detect create or edit mode
+                if (this.location.id !== 'undefined') {
+                    // Signal to edit the selected club
+                    this._mode = 'edit';
+                    this.dispatch(AppStore.actions.editClub(this.location.id));
+                } else {
+                    // Signal to create a club
+                    this._mode = 'create';
+                    this.dispatch(AppStore.actions.createClub());
+                }
             }
 
             goBack() {
                 this.dispatch(AppStore.actions.navigateTo({page: 'view2'}));
+            }
+
+            doSave() {
+                this.dispatch(AppStore.actions.showSpinner(true));
+                // Save edited
+                let promise = null;
+                if (this._mode === 'edit') {
+                    promise = this.$.document.setStoredValue(this._url, this._editData);
+                } else {
+                    promise = this.$.document.db.ref('/clubs').push(this._editData);
+                }
+                promise.then(() => {
+                    this.dispatch(AppStore.actions.showSpinner(false));
+                    this.goBack();
+                }).catch((error) => {
+                    // TODO: Show error message
+                    console.log(error);
+                    this.dispatch(AppStore.actions.showSpinner(false));
+                });
             }
         }
 
