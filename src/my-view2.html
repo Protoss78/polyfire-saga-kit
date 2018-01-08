@@ -30,6 +30,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 right: 1.5em;
                 bottom: 1em;
             }
+
+            .flexbox {
+                display: flex;
+            }
+
+            .spacer {
+                flex: 1;
+            }
         </style>
 
         <firebase-query
@@ -48,9 +56,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 <template is="dom-repeat" items="{{_data}}">
                     <paper-card heading="[[item.name]]">
                         <div class="card-content">[[item.description]]</div>
-                        <div class="card-actions">
-                            <paper-button on-click="editClub">Edit</paper-button>
-                            <paper-button on-click="displayClub">Display</paper-button>
+                        <div class="card-actions flexbox">
+                            <paper-icon-button icon="my-icons:info-outline" on-click="displayClub"></paper-icon-button>
+                            <div class="spacer"></div>
+                            <paper-icon-button icon="my-icons:create" on-click="editClub"></paper-icon-button>
+                            <div class="spacer"></div>
+                            <paper-icon-button icon="my-icons:delete" on-click="deleteClub"></paper-icon-button>
                         </div>
                     </paper-card>
                 </template>
@@ -136,6 +147,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
             createClub() {
                 this.dispatch(AppStore.actions.navigateTo({page: 'editor', id: null}));
+            }
+
+            deleteClub(e) {
+                // TODO: Show question dialog
+                this.dispatch(AppStore.actions.showSpinner(true));
+                // Delete club
+                this.$.query.setStoredValue('/clubs/' + e.model.item.$key, null).then(() => {
+                    this.dispatch(AppStore.actions.showSpinner(false));
+                }).catch((error) => {
+                    // TODO: Show error message
+                    console.log(error);
+                    this.dispatch(AppStore.actions.showSpinner(false));
+                });
             }
         }
 

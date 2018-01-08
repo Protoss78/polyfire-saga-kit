@@ -110,6 +110,13 @@
             return {type: 'CREATE_CLUB'};
         }
 
+        function deleteClub(id) {
+            return {
+                type: 'DELETE_CLUB',
+                id: id
+            };
+        }
+
         AppStore.actions = {
             showSpinner,
             setLoadedList,
@@ -128,7 +135,8 @@
             setEditUrl,
             setClub,
             finalizeClubLoad,
-            createClub
+            createClub,
+            deleteClub
         }
 
     }());
