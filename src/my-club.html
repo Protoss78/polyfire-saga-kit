@@ -12,6 +12,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../bower_components/polymerfire/firebase-document.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../bower_components/paper-card/paper-card.html">
 <link rel="import" href="redux/app-store.html">
 <link rel="import" href="shared-styles.html">
 
@@ -31,11 +32,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 data="{{_data}}">
         </firebase-document>
 
-        <div class="card">
-            <div class="circle">D</div>
-            <h1><paper-icon-button icon="my-icons:arrow-back" on-click="goBack"></paper-icon-button>[[_data.name]]</h1>
-            <div>[[_data.description]]</div>
-        </div>
+        <paper-card heading="[[_data.name]]">
+            <div class="card-content">
+                <div>[[_data.description]]</div>
+            </div>
+            <div class="card-actions flexbox">
+                <paper-icon-button icon="my-icons:arrow-back" on-click="goBack"></paper-icon-button>
+                <div class="spacer"></div>
+            </div>
+        </paper-card>
     </template>
 
     <script>
