@@ -1,0 +1,122 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/paper-toast/paper-toast.html">
+<link rel="import" href="../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="redux/app-store.html">
+
+<dom-module id="redux-toast">
+    <template>
+        <style include="shared-styles">
+            :host {
+            }
+
+            paper-toast {
+                display: inline-flex;
+            }
+
+            iron-icon {
+                margin-right: 1em;
+            }
+
+            div {
+                margin-top: auto;
+                margin-bottom: auto;
+                font-size: 14px;
+            }
+
+            .notify {
+                --paper-toast-background-color: green;
+                --paper-toast-color: white;
+            }
+
+            .question {
+                --paper-toast-color: yellow;
+            }
+
+            .error {
+                --paper-toast-background-color: red;
+                --paper-toast-color: white;
+            }
+        </style>
+
+        <paper-toast id="notifyToast" class="notify" duration="3000">
+            <iron-icon icon="my-icons:info-outline"></iron-icon>
+            <div>[[infoText]]</div>
+        </paper-toast>
+        <paper-toast id="errorToast" duration="0">
+            <iron-icon icon="my-icons:error-outline"></iron-icon>
+            [[questionText]]
+            <paper-button label="Yes" on-click="answerYes"></paper-button>
+            <paper-button label="No" on-click="answerNo"></paper-button>
+        </paper-toast>
+        <paper-toast id="questionToast" duration="0">
+            <iron-icon icon="my-icons:help-outline"></iron-icon>
+            [[errorText]]
+            <paper-button label="OK" on-click="hideQuestion"></paper-button>
+        </paper-toast>
+    </template>
+
+    <script>
+        class ReduxToast extends AppStore.ReduxMixin
+
+        (Polymer.Element)
+        {
+            static
+            get
+            is()
+            {
+                return 'redux-toast';
+            }
+            static
+            get
+            properties()
+            {
+                return {
+                    showToast: {
+                        type: Object,
+                        statePath: 'showToast',
+                        observer: '_doShowToast'
+                    },
+                    questionText: {
+                        type: String
+                    },
+                    infoText: {
+                        type: String
+                    },
+                    errorText: {
+                        type: String
+                    }
+                };
+            }
+
+            _doShowToast(showToast)
+            {
+                if (!showToast) {
+                    return;
+                }
+                console.log(showToast);
+                switch (showToast.type) {
+                    case 'INFO':
+                        this.infoText = showToast.infoText;
+                        this.$.notifyToast.show();
+                        break;
+                    case 'ERROR':
+                        this.errorText = showToast.errorText;
+                        this.$.errorToast.show();
+                        break;
+                    case 'QUESTION':
+                        this.infoText = showToast.infoText;
+                        this.$.questionToast.show();
+                        break;
+                }
+            }
+
+            hideQuestion()
+            {
+                this.$.questionToast.close();
+            }
+        }
+
+        window.customElements.define(ReduxToast.is, ReduxToast);
+    </script>
+</dom-module>

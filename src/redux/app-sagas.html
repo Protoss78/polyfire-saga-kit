@@ -14,8 +14,10 @@
                 yield ReduxSaga.delay(1000);
                 yield effects.put(MyApp.actions.setLoadedList(result));
                 yield effects.put(MyApp.actions.showSpinner(false));
+                yield effects.put(MyApp.actions.showInfo('List loaded'));
             } catch (e) {
                 console.log(e);
+                yield effects.put(MyApp.actions.showError('Error while fetching list', e));
                 yield effects.put(MyApp.actions.clearLoadedList());
                 yield effects.put(MyApp.actions.showSpinner(false));
             }
@@ -28,6 +30,7 @@
             yield ReduxSaga.delay(1000);
             yield effects.put(MyApp.actions.clearLoadedList());
             yield effects.put(MyApp.actions.showSpinner(false));
+            yield effects.put(MyApp.actions.showInfo('List cleared'));
         }
 
         // worker Saga: will be fired on CLEAR_LIST actions
@@ -40,6 +43,7 @@
                 yield effects.put(MyApp.actions.setQueryUrl('/clubs'));
             } catch (e) {
                 console.log(e);
+                yield effects.put(MyApp.actions.showError('Error while fetching club list', e));
                 yield effects.put(MyApp.actions.setQueryUrl(null));
                 yield effects.put(MyApp.actions.showSpinner(false));
             }
@@ -52,6 +56,7 @@
                 yield effects.put(MyApp.actions.showSpinner(false));
             } catch (e) {
                 console.log(e);
+                yield effects.put(MyApp.actions.showError('Error while fetching club list', e));
                 yield effects.put(MyApp.actions.setClubList(null));
                 yield effects.put(MyApp.actions.showSpinner(false));
             }
@@ -67,6 +72,7 @@
                 yield effects.put(MyApp.actions.setEditUrl('/clubs/' + action.id));
             } catch (e) {
                 console.log(e);
+                yield effects.put(MyApp.actions.showError('Error while updating club', e));
                 yield effects.put(MyApp.actions.setEditUrl(null));
                 yield effects.put(MyApp.actions.showSpinner(false));
             }
@@ -82,6 +88,7 @@
                 yield effects.put(MyApp.actions.setEditUrl('/clubs/' + action.id));
             } catch (e) {
                 console.log(e);
+                yield effects.put(MyApp.actions.showError('Error while loading club', e));
                 yield effects.put(MyApp.actions.setEditUrl(null));
                 yield effects.put(MyApp.actions.showSpinner(false));
             }
@@ -93,6 +100,7 @@
                 yield effects.put(MyApp.actions.showSpinner(false));
             } catch (e) {
                 console.log(e);
+                yield effects.put(MyApp.actions.showError('Error while loading club', e));
                 yield effects.put(MyApp.actions.setClub(null));
                 yield effects.put(MyApp.actions.showSpinner(false));
             }
@@ -107,6 +115,7 @@
                 yield effects.put(MyApp.actions.setEditUrl('/clubs'));
             } catch (e) {
                 console.log(e);
+                yield effects.put(MyApp.actions.showError('Error while creating club', e));
                 yield effects.put(MyApp.actions.setEditUrl(null));
                 yield effects.put(MyApp.actions.showSpinner(false));
             }

@@ -162,9 +162,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 promise.then(() => {
                     this.dispatch(AppStore.actions.showSpinner(false));
                     this.goBack();
+                    this.dispatch(AppStore.actions.showInfo('Club saved'));
                 }).catch((error) => {
-                    // TODO: Show error message
                     console.log(error);
+                    this.dispatch(AppStore.actions.showError('Error while saving club', error));
                     this.dispatch(AppStore.actions.showSpinner(false));
                 });
             }

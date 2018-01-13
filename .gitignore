@@ -58,7 +58,7 @@ typings/
 .env
 
 # Ignore IntelliJ files
-.idea
+.idea/
 
 # CMake
 cmake-build-debug/

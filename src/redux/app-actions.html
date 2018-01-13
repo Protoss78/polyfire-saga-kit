@@ -117,6 +117,31 @@
             };
         }
 
+        function showQuestion(question, yes, no, yesAction) {
+            return {
+                type: 'SHOW_QUESTION',
+                questionText: question,
+                yesText: yes,
+                noText: no,
+                yesAction: yesAction
+            };
+        }
+
+        function showInfo(infoText) {
+            return {
+                type: 'SHOW_INFO',
+                infoText: infoText
+            };
+        }
+
+        function showError(errorText, exception) {
+            return {
+                type: 'SHOW_ERROR',
+                errorText: errorText,
+                exception: exception
+            };
+        }
+
         AppStore.actions = {
             showSpinner,
             setLoadedList,
@@ -136,7 +161,10 @@
             setClub,
             finalizeClubLoad,
             createClub,
-            deleteClub
+            deleteClub,
+            showQuestion,
+            showInfo,
+            showError
         }
 
     }());

@@ -1,7 +1,7 @@
 <script src="../../node_modules/redux/dist/redux.min.js"></script>
 
 <script>
-    (function() {
+    (function () {
 
         function showLoadingSpinner(state = false, action) {
             switch (action.type) {
@@ -79,6 +79,30 @@
             return state;
         }
 
+        function showToast(state= {}, action) {
+            switch (action.type) {
+                case 'SHOW_INFO':
+                    return {
+                        type: 'INFO',
+                        infoText: action.infoText
+                    };
+                case 'SHOW_ERROR':
+                    return {
+                        type: 'ERROR',
+                        errorText: action.errorText,
+                        exception: action.exception
+                    };
+                case 'SHOW_QUESTION':
+                    return {
+                        type: 'QUESTION',
+                        yesText: action.yes,
+                        noText: action.no,
+                        yesAction: action.yesAction
+                    };
+            }
+            return state;
+        }
+
         AppStore.rootReducer = Redux.combineReducers({
             showLoadingSpinner,
             loadedList,
@@ -88,7 +112,8 @@
             queryUrl,
             id,
             editUrl,
-            club
+            club,
+            showToast
         })
 
     }());
