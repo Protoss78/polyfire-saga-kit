@@ -11,7 +11,6 @@
 /* eslint-env node */
 
 module.exports = {
-  navigateFallbackWhitelist: [ /^(?!/__)/ ],
   staticFileGlobs: [
     'bower_components/webcomponentsjs/webcomponents-loader.js',
     'images/*',
@@ -28,4 +27,5 @@ module.exports = {
       },
     },
   ],
+  navigateFallbackWhitelist: [/^\/[^\_]+\/?/]
 };
