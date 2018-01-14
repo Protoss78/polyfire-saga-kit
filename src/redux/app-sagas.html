@@ -10,6 +10,7 @@
          */
 
         const getFirebaseApp = (state) => state.firebaseApp;
+        const getUser = (state) => state.user;
 
         /*
          * Basic firebase generator functions.
@@ -85,10 +86,12 @@
         function* loadClubs(action) {
             try {
                 yield effects.put(MyApp.actions.showSpinner(true));
+                let user = yield effects.select(getUser);
+                let path = '/users/'+ user.uid + '/clubs';
                 // Query URL has to be set to blank first, to force a reload even when we set it back to the same value
                 // TODO: Find a better solution for this
                 yield effects.put(MyApp.actions.setQueryUrl(''));
-                yield effects.put(MyApp.actions.setQueryUrl('/clubs'));
+                yield effects.put(MyApp.actions.setQueryUrl(path));
             } catch (e) {
                 console.log(e);
                 yield effects.put(MyApp.actions.showError('Error while fetching club list', e));
@@ -114,7 +117,9 @@
             try {
                 yield effects.put(MyApp.actions.showSpinner(true));
                 yield effects.put(MyApp.actions.setId(action.id));
-                let club = yield effects.call(_read, '/clubs/' + action.id);
+                let user = yield effects.select(getUser);
+                let path = '/users/'+ user.uid + '/clubs/' + action.id;
+                let club = yield effects.call(_read, path);
                 yield effects.put(MyApp.actions.setClub(club));
                 yield effects.put(MyApp.actions.showSpinner(false));
             } catch (e) {
@@ -129,7 +134,9 @@
             try {
                 yield effects.put(MyApp.actions.showSpinner(true));
                 yield effects.put(MyApp.actions.setId(action.id));
-                let club = yield effects.call(_read, '/clubs/' + action.id);
+                let user = yield effects.select(getUser);
+                let path = '/users/'+ user.uid + '/clubs/' + action.id;
+                let club = yield effects.call(_read, path);
                 yield effects.put(MyApp.actions.setClub(club));
                 yield effects.put(MyApp.actions.showSpinner(false));
             } catch (e) {
@@ -167,7 +174,9 @@
         function* deleteClub(action) {
             try {
                 yield effects.put(MyApp.actions.showSpinner(true));
-                yield effects.call(_delete, '/clubs/' + action.id);
+                let user = yield effects.select(getUser);
+                let path = '/users/'+ user.uid + '/clubs/' + action.id;
+                yield effects.call(_delete, path);
                 yield effects.put(MyApp.actions.showSpinner(false));
                 yield effects.put(MyApp.actions.showInfo('Club deleted'));
             } catch (e) {
@@ -179,7 +188,9 @@
         function* updateClub(action) {
             try {
                 yield effects.put(MyApp.actions.showSpinner(true));
-                yield effects.call(_update, '/clubs/' + action.id, action.club);
+                let user = yield effects.select(getUser);
+                let path = '/users/'+ user.uid + '/clubs/' + action.id;
+                yield effects.call(_update, path, action.club);
                 yield effects.put(MyApp.actions.showSpinner(false));
                 yield effects.put(MyApp.actions.showInfo('Club saved'));
                 yield effects.put(MyApp.actions.navigateTo({page: 'view2'}));
@@ -192,7 +203,9 @@
         function* saveNewClub(action) {
             try {
                 yield effects.put(MyApp.actions.showSpinner(true));
-                yield effects.call(_create, '/clubs', action.club);
+                let user = yield effects.select(getUser);
+                let path = '/users/'+ user.uid + '/clubs';
+                yield effects.call(_create, path, action.club);
                 yield effects.put(MyApp.actions.showSpinner(false));
                 yield effects.put(MyApp.actions.showInfo('Club added'));
                 yield effects.put(MyApp.actions.navigateTo({page: 'view2'}));

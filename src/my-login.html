@@ -25,7 +25,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <div class="card">
             <div class="circle">4</div>
             <h1>Sign In / Sign Up</h1>
-            <login-fire name="login"
+            <login-fire id="loginfire"
+                        name="login"
                         user="{{user}}"
                         providers="google, anonymous"
                         reenter-password
@@ -49,21 +50,30 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 };
             }
 
-            _userChanged(event) {
+            _userChanged(user) {
                 console.log('userChanged');
                 console.log(event);
+                if (user && user.uid) {
+                    this.dispatch(AppStore.actions.signInUser(user));
+                }
             }
 
             _signedIn(event) {
                 console.log('_signedIn');
                 console.log(event);
                 this.dispatch(AppStore.actions.signInUser(event.detail.user));
+                this.dispatch(AppStore.actions.navigateTo({page: 'view1'}));
             }
 
             _signedOut(event) {
                 console.log('_signedOut');
                 console.log(event);
                 this.dispatch(AppStore.actions.signOutUser());
+            }
+
+            signOut() {
+                this.$.loginfire.signOut();
+                this.dispatch(AppStore.actions.navigateTo({page: 'view1'}));
             }
         }
 

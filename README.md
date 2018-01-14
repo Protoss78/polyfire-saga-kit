@@ -31,5 +31,6 @@ The current project state can be found here: https://pofiresa.firebaseapp.com
 - [x] Simple create and edit screen that uses Firebase Document
 - [x] Added basic delete functionality
 - [x] Added basic notification handling
-- [ ] Add Firebase authentication and add user to redux-store
+- [x] Add Firebase authentication and add user to redux-store
+- [x] Structure data below user id
 - [ ] Add internationalization support

@@ -156,18 +156,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 this.dispatch(AppStore.actions.showQuestion('Really delete ' + name +'?', 'Yes', 'No', deleteAction));
             }
 
-            deleteClub(e) {
-                // TODO: Show question dialog
-                this.dispatch(AppStore.actions.showSpinner(true));
-                // Delete club
-                this.$.query.setStoredValue('/clubs/' + e.model.item.$key, null).then(() => {
-                    this.dispatch(AppStore.actions.showSpinner(false));
-                }).catch((error) => {
-                    // TODO: Show error message
-                    console.log(error);
-                    this.dispatch(AppStore.actions.showSpinner(false));
-                });
-            }
         }
 
         window.customElements.define(MyView2.is, MyView2);
