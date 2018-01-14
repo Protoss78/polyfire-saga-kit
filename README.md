@@ -28,6 +28,8 @@ The current project state can be found here: https://pofiresa.firebaseapp.com
 - [x] Implement a generic navigation action
 - [x] Integrate Firebase via Polymerfire
 - [x] Implement Firebase Query and display results (use redux-saga)
-- [x] Simple edit screen that uses Firebase Document
+- [x] Simple create and edit screen that uses Firebase Document
+- [x] Added basic delete functionality
+- [x] Added basic notification handling
 - [ ] Add Firebase authentication and add user to redux-store
 - [ ] Add internationalization support
