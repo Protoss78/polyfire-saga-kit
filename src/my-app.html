@@ -75,6 +75,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 font-weight: bold;
             }
 
+            a[hidden] {
+                display: none;
+            }
+
             paper-progress {
                 display: block;
                 width: 100%;
@@ -101,7 +105,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 <app-toolbar>Menu</app-toolbar>
                 <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
                     <a name="view1" href="[[rootPath]]view1">1. Fake List Load</a>
-                    <a name="view2" href="[[rootPath]]view2">2. Firebase List</a>
+                    <a name="view2" href="[[rootPath]]view2" hidden$="[[!isAuthenticated]]">2. Firebase List</a>
                     <a name="view3" href="[[rootPath]]view3">3. View Three</a>
                     <a name="login" href="[[rootPath]]login">4. Sign In / Sign Up</a>
                 </iron-selector>
@@ -158,6 +162,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                         type: Object,
                         statePath: 'user',
                         observer: '_userChanged'
+                    },
+                    isAuthenticated: {
+                        type: Boolean,
+                        computed: '_isAuthenticated(user.uid)'
                     }
                 };
             }
@@ -192,6 +200,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             _userChanged(event) {
                 console.log('my-app.userChanged');
                 console.log(event);
+            }
+
+            _isAuthenticated(uid) {
+                console.log('_isAuthenticated');
+                console.log(uid);
+                if (uid) {
+                    return true;
+                }
+                return false;
             }
         }
 
