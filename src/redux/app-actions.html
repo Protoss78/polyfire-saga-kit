@@ -117,6 +117,20 @@
             };
         }
 
+        function updateClub(club) {
+            return {
+                type: 'UPDATE_CLUB',
+                club: club
+            };
+        }
+
+        function saveNewClub(club) {
+            return {
+                type: 'SAVE_NEW_CLUB',
+                club: club
+            };
+        }
+
         function showQuestion(question, yes, no, yesAction, noAction) {
             return {
                 type: 'SHOW_QUESTION',
@@ -173,7 +187,9 @@
             showQuestion,
             showInfo,
             showError,
-            setFirebaseApp
+            setFirebaseApp,
+            updateClub,
+            saveNewClub
         }
 
     }());

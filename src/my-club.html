@@ -10,7 +10,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
-<link rel="import" href="../bower_components/polymerfire/firebase-document.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../bower_components/paper-card/paper-card.html">
 <link rel="import" href="redux/app-store.html">
@@ -21,20 +20,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <style include="shared-styles">
             :host {
                 display: block;
-
                 padding: 10px;
             }
         </style>
 
-        <firebase-document
-                id="document"
-                path="{{_url}}"
-                data="{{_data}}">
-        </firebase-document>
-
-        <paper-card heading="[[_data.name]]">
+        <paper-card heading="[[club.name]]">
             <div class="card-content">
-                <div>[[_data.description]]</div>
+                <div>[[club.description]]</div>
             </div>
             <div class="card-actions flexbox">
                 <paper-icon-button icon="my-icons:arrow-back" on-click="goBack"></paper-icon-button>
@@ -56,27 +48,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                         statePath: 'location',
                         observer: '_locationChanged'
                     },
-                    editUrl: {
-                        type: String,
-                        statePath: 'editUrl',
-                        observer: '_editUrlChanged'
-                    },
-                    editMode: {
-                        type: String,
-                        statePath: 'editMode',
-                        observer: '_editModeChanged'
-                    },
-                    id: {
-                        type: String,
-                        statePath: 'id'
-                    },
-                    _url: {
-                        type: String,
-                        value: ''
-                    },
-                    _data: {
+                    club: {
                         type: Object,
-                        observer: '_dataChanged'
+                        observer: '_dataChanged',
+                        statePath: 'club'
                     }
                 };
             }
@@ -97,21 +72,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 if (location.page === this.constructor.page) {
                     this.refresh();
                 }
-            }
-
-            // Called whenever the edit URL changed
-            _editUrlChanged(editUrl) {
-                // Set URL to blank when we are not active to trigger reload when activated the next time
-                if (!this.isActivePage()) {
-                    this._url = '';
-                    return;
-                }
-                this._url = editUrl;
-            }
-
-            _dataChanged(_data) {
-                // Signal that the document was successfully loaded
-                this.dispatch(AppStore.actions.finalizeClubLoad(_data));
             }
 
             refresh() {

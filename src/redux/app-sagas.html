@@ -82,10 +82,13 @@
             try {
                 yield effects.put(MyApp.actions.showSpinner(true));
                 yield effects.put(MyApp.actions.setId(action.id));
+                let club = yield effects.call(_read, '/clubs/' + action.id);
+                yield effects.put(MyApp.actions.setClub(club));
+                yield effects.put(MyApp.actions.showSpinner(false));
                 // Query URL has to be set to blank first, to force a reload even when we set it back to the same value
                 // TODO: Find a better solution for this
-                yield effects.put(MyApp.actions.setEditUrl(''));
-                yield effects.put(MyApp.actions.setEditUrl('/clubs/' + action.id));
+                /*yield effects.put(MyApp.actions.setEditUrl(''));
+                yield effects.put(MyApp.actions.setEditUrl('/clubs/' + action.id));*/
             } catch (e) {
                 console.log(e);
                 yield effects.put(MyApp.actions.showError('Error while loading club', e));
@@ -128,29 +131,45 @@
             return app.database().ref(path);
         }
 
-        function* create (pathOrRef, data) {
+        function* _create(pathOrRef, data) {
             let ref = yield effects.call(_getRef, path);
             const result = yield effects.call([ref, ref.push], data);
-
-            return result.key
+            return result.key;
         }
 
-        function* update (pathOrRef, data) {
+        function* _update(path, data) {
             let ref = yield effects.call(_getRef, path);
             yield effects.call([ref, ref.set], data);
         }
 
-        function* patch (path, data) {
+        function* _patch(path, data) {
             let ref = yield effects.call(_getRef, path);
             yield effects.call([ref, ref.update], data);
         }
 
         function* _delete (path) {
-            let app = yield effects.select(getFirebaseApp);
-            let ref = app.database().ref(path);
+            let ref = yield effects.call(_getRef, path);
             yield effects.call([ref, ref.remove]);
         }
 
+        function* _read(path) {
+            let ref = yield effects.call(_getRef, path);
+            const result = yield effects.call([ref, ref.once], 'value');
+            return result.val();
+        }
+
+        function* getClub(action) {
+            try {
+                yield effects.put(MyApp.actions.showSpinner(true));
+                let club = yield effects.call(_read, '/clubs/' + action.id);
+                yield effects.put(MyApp.actions.setClub(club));
+                yield effects.put(MyApp.actions.showSpinner(false));
+                yield effects.put(MyApp.actions.showInfo('Club deleted'));
+            } catch (e) {
+                yield effects.put(MyApp.actions.showError('Error while creating club', e));
+                yield effects.put(MyApp.actions.showSpinner(false));
+            }
+        }
 
         function* deleteClub(action) {
             try {
@@ -162,7 +181,30 @@
                 yield effects.put(MyApp.actions.showError('Error while creating club', e));
                 yield effects.put(MyApp.actions.showSpinner(false));
             }
+        }
 
+        function* updateClub(action) {
+            try {
+                yield effects.put(MyApp.actions.showSpinner(true));
+                yield effects.call(_update, '/clubs/' + action.club.$key, action.club);
+                yield effects.put(MyApp.actions.showSpinner(false));
+                yield effects.put(MyApp.actions.showInfo('Club saved'));
+            } catch (e) {
+                yield effects.put(MyApp.actions.showError('Error while creating club', e));
+                yield effects.put(MyApp.actions.showSpinner(false));
+            }
+        }
+
+        function* saveNewClub(action) {
+            try {
+                yield effects.put(MyApp.actions.showSpinner(true));
+                yield effects.call(_create, '/clubs', action.club);
+                yield effects.put(MyApp.actions.showSpinner(false));
+                yield effects.put(MyApp.actions.showInfo('Club added'));
+            } catch (e) {
+                yield effects.put(MyApp.actions.showError('Error while creating club', e));
+                yield effects.put(MyApp.actions.showSpinner(false));
+            }
         }
 
         /*
@@ -180,6 +222,8 @@
             yield effects.takeEvery('FINALIZE_CLUB_LOAD', clubLoaded);
             yield effects.takeEvery('CREATE_CLUB', createClub);
             yield effects.takeEvery('DELETE_CLUB', deleteClub);
+            yield effects.takeEvery('UPDATE_CLUB', updateClub);
+            yield effects.takeEvery('SAVE_NEW_CLUB', saveNewClub);
         }
 
         AppStore.rootSaga = rootSaga;

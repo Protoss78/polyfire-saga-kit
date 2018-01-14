@@ -151,7 +151,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             }
 
             doSave() {
-                this.dispatch(AppStore.actions.showSpinner(true));
+                if (this._mode === 'edit') {
+                    this.dispatch(AppStore.actions.updateClub(this._editData));
+                } else {
+                    this.dispatch(AppStore.actions.saveNewClub(this._editData));
+                }
+                /*this.dispatch(AppStore.actions.showSpinner(true));
                 // Save edited
                 let promise = null;
                 if (this._mode === 'edit') {
@@ -167,7 +172,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     console.log(error);
                     this.dispatch(AppStore.actions.showError('Error while saving club', error));
                     this.dispatch(AppStore.actions.showSpinner(false));
-                });
+                });*/
             }
         }
 
