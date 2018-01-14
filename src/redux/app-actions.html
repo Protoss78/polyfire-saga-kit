@@ -165,6 +165,19 @@
             };
         }
 
+        function signInUser(user) {
+            return {
+                type: 'SIGN_IN_USER',
+                user: user
+            }
+        }
+
+        function signOutUser() {
+            return {
+                type: 'SIGN_OUT_USER'
+            }
+        }
+
         AppStore.actions = {
             showSpinner,
             setLoadedList,
@@ -190,7 +203,9 @@
             showError,
             setFirebaseApp,
             updateClub,
-            saveNewClub
+            saveNewClub,
+            signInUser,
+            signOutUser
         }
 
     }());

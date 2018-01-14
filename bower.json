@@ -22,7 +22,8 @@
     "paper-input": "PolymerElements/paper-input#^2.0.5",
     "paper-card": "PolymerElements/paper-card#^2.0.0",
     "paper-fab": "PolymerElements/paper-fab#^2.0.0",
-    "paper-toast": "PolymerElements/paper-toast#^2.0.0"
+    "paper-toast": "PolymerElements/paper-toast#^2.0.0",
+    "login-fire": "^1.0.0"
   },
   "resolutions": {
     "polymer": "^2.0.0"

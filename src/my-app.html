@@ -32,6 +32,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="lazy-import" href="my-view3.html">
 <link rel="lazy-import" href="my-editor.html">
 <link rel="lazy-import" href="my-club.html">
+<link rel="lazy-import" href="my-login.html">
 <link rel="lazy-import" href="my-view404.html">
 
 <dom-module id="my-app">
@@ -102,6 +103,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     <a name="view1" href="[[rootPath]]view1">1. Fake List Load</a>
                     <a name="view2" href="[[rootPath]]view2">2. Firebase List</a>
                     <a name="view3" href="[[rootPath]]view3">3. View Three</a>
+                    <a name="login" href="[[rootPath]]login">4. Sign In / Sign Up</a>
                 </iron-selector>
             </app-drawer>
 
@@ -111,7 +113,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 <app-header slot="header" condenses reveals effects="waterfall">
                     <app-toolbar>
                         <paper-icon-button icon="my-icons:menu" drawer-toggle></paper-icon-button>
-                        <div main-title>My App</div>
+                        <div main-title>Polyfire Saga Kit</div>
                         <paper-progress bottom-item indeterminate$="{{showLoadingSpinner}}"></paper-progress>
                     </app-toolbar>
                 </app-header>
@@ -127,6 +129,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     <my-editor name="editor"></my-editor>
                     <my-club name="club"></my-club>
                     <my-view404 name="view404"></my-view404>
+                    <my-login name="login"></my-login>
                 </iron-pages>
             </app-header-layout>
         </app-drawer-layout>
@@ -150,6 +153,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                         type: Object,
                         statePath: 'location',
                         observer: '_locationChanged'
+                    },
+                    user: {
+                        type: Object,
+                        statePath: 'user',
+                        observer: '_userChanged'
                     }
                 };
             }
@@ -179,6 +187,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             _firebaseAppChanged(event) {
                 console.log(event.detail.value);
                 this.dispatch(AppStore.actions.setFirebaseApp(event.detail.value));
+            }
+
+            _userChanged(event) {
+                console.log('my-app.userChanged');
+                console.log(event);
             }
         }
 

@@ -1,0 +1,72 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/login-fire/login-fire.html">
+<link rel="import" href="redux/app-store.html">
+<link rel="import" href="shared-styles.html">
+
+<dom-module id="my-login">
+    <template>
+        <style include="shared-styles">
+            :host {
+                display: block;
+                padding: 10px;
+            }
+        </style>
+
+        <div class="card">
+            <div class="circle">4</div>
+            <h1>Sign In / Sign Up</h1>
+            <login-fire name="login"
+                        user="{{user}}"
+                        providers="google, anonymous"
+                        reenter-password
+                        on-signedin="_signedIn"
+                        on-signedout="_signedOut"></login-fire>
+        </div>
+    </template>
+
+    <script>
+        class MyLogin extends AppStore.ReduxMixin(Polymer.Element) {
+            static get is() {
+                return 'my-login';
+            }
+
+            static get properties() {
+                return {
+                    user: {
+                        type: Object,
+                        observer: '_userChanged'
+                    }
+                };
+            }
+
+            _userChanged(event) {
+                console.log('userChanged');
+                console.log(event);
+            }
+
+            _signedIn(event) {
+                console.log('_signedIn');
+                console.log(event);
+                this.dispatch(AppStore.actions.signInUser(event.detail.user));
+            }
+
+            _signedOut(event) {
+                console.log('_signedOut');
+                console.log(event);
+                this.dispatch(AppStore.actions.signOutUser());
+            }
+        }
+
+        window.customElements.define(MyLogin.is, MyLogin);
+    </script>
+</dom-module>

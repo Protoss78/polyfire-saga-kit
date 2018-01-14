@@ -12,6 +12,7 @@
     "src/my-view3.html",
     "src/my-editor.html",
     "src/my-club.html",
+    "src/my-login.html",
     "src/my-view404.html"
   ],
   "sources": [

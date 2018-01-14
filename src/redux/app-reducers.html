@@ -113,6 +113,16 @@
             return state;
         }
 
+        function user(state = {}, action) {
+            switch(action.type) {
+                case 'SIGN_IN_USER':
+                    return action.user;
+                case 'SIGN_OUT_USER':
+                    return null;
+            }
+            return state;
+        }
+
         AppStore.rootReducer = Redux.combineReducers({
             showLoadingSpinner,
             loadedList,
@@ -124,7 +134,8 @@
             editUrl,
             club,
             showToast,
-            firebaseApp
+            firebaseApp,
+            user
         })
 
     }());
