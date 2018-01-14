@@ -16,11 +16,14 @@
 
             iron-icon {
                 margin-right: 1em;
+                margin-top: auto;
+                margin-bottom: auto;
             }
 
             div {
                 margin-top: auto;
                 margin-bottom: auto;
+                margin-right: 1em;
                 font-size: 14px;
             }
 
@@ -33,6 +36,16 @@
                 --paper-toast-color: yellow;
             }
 
+            .yesButton {
+                background: greenyellow;
+                color: black;
+            }
+
+            .noButton {
+                background: red;
+                color: black;
+            }
+
             .error {
                 --paper-toast-background-color: red;
                 --paper-toast-color: white;
@@ -41,18 +54,18 @@
 
         <paper-toast id="notifyToast" class="notify" duration="3000">
             <iron-icon icon="my-icons:info-outline"></iron-icon>
-            <div>[[infoText]]</div>
+            <div>[[showToast.infoText]]</div>
         </paper-toast>
-        <paper-toast id="errorToast" duration="0">
+        <paper-toast id="errorToast" class="error" duration="0">
             <iron-icon icon="my-icons:error-outline"></iron-icon>
-            [[questionText]]
-            <paper-button label="Yes" on-click="answerYes"></paper-button>
-            <paper-button label="No" on-click="answerNo"></paper-button>
+            <div>[[showToast.errorText]]</div>
+            <paper-button label="OK" on-click="hideError"></paper-button>
         </paper-toast>
-        <paper-toast id="questionToast" duration="0">
+        <paper-toast id="questionToast" class="question" duration="0">
             <iron-icon icon="my-icons:help-outline"></iron-icon>
-            [[errorText]]
-            <paper-button label="OK" on-click="hideQuestion"></paper-button>
+            <div>[[showToast.questionText]]</div>
+            <paper-button class="yesButton" on-click="answerYes">[[showToast.yesText]]</paper-button>
+            <paper-button class="noButton" on-click="answerNo">[[showToast.noText]]</paper-button>
         </paper-toast>
     </template>
 
@@ -76,15 +89,6 @@
                         type: Object,
                         statePath: 'showToast',
                         observer: '_doShowToast'
-                    },
-                    questionText: {
-                        type: String
-                    },
-                    infoText: {
-                        type: String
-                    },
-                    errorText: {
-                        type: String
                     }
                 };
             }
@@ -97,22 +101,35 @@
                 console.log(showToast);
                 switch (showToast.type) {
                     case 'INFO':
-                        this.infoText = showToast.infoText;
                         this.$.notifyToast.show();
                         break;
                     case 'ERROR':
-                        this.errorText = showToast.errorText;
                         this.$.errorToast.show();
                         break;
                     case 'QUESTION':
-                        this.infoText = showToast.infoText;
                         this.$.questionToast.show();
                         break;
                 }
             }
 
-            hideQuestion()
+            hideError()
             {
+                this.$.errorToast.close();
+            }
+
+            answerYes()
+            {
+                if (this.showToast.yesAction) {
+                    this.dispatch(this.showToast.yesAction);
+                }
+                this.$.questionToast.close();
+            }
+
+            answerNo()
+            {
+                if (this.showToast.yesAction) {
+                    this.dispatch(this.showToast.noAction);
+                }
                 this.$.questionToast.close();
             }
         }

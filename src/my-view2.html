@@ -61,7 +61,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                             <div class="spacer"></div>
                             <paper-icon-button icon="my-icons:create" on-click="editClub"></paper-icon-button>
                             <div class="spacer"></div>
-                            <paper-icon-button icon="my-icons:delete" on-click="deleteClub"></paper-icon-button>
+                            <paper-icon-button icon="my-icons:delete" on-click="askForDelete"></paper-icon-button>
                         </div>
                     </paper-card>
                 </template>
@@ -147,6 +147,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
             createClub() {
                 this.dispatch(AppStore.actions.navigateTo({page: 'editor', id: null}));
+            }
+
+            askForDelete(e) {
+                let name = e.model.item.name;
+                let id = e.model.item.$key;
+                let deleteAction = AppStore.actions.deleteClub(id);
+                this.dispatch(AppStore.actions.showQuestion('Really delete ' + name +'?', 'Yes', 'No', deleteAction));
             }
 
             deleteClub(e) {

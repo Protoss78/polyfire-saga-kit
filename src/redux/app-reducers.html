@@ -95,9 +95,11 @@
                 case 'SHOW_QUESTION':
                     return {
                         type: 'QUESTION',
-                        yesText: action.yes,
-                        noText: action.no,
-                        yesAction: action.yesAction
+                        questionText: action.questionText,
+                        yesText: action.yesText,
+                        noText: action.noText,
+                        yesAction: action.yesAction,
+                        noAction: action.noAction
                     };
             }
             return state;

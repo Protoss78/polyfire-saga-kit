@@ -117,13 +117,14 @@
             };
         }
 
-        function showQuestion(question, yes, no, yesAction) {
+        function showQuestion(question, yes, no, yesAction, noAction) {
             return {
                 type: 'SHOW_QUESTION',
                 questionText: question,
                 yesText: yes,
                 noText: no,
-                yesAction: yesAction
+                yesAction: yesAction,
+                noAction: noAction
             };
         }
 
