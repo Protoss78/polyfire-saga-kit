@@ -117,9 +117,10 @@
             };
         }
 
-        function updateClub(club) {
+        function updateClub(id, club) {
             return {
                 type: 'UPDATE_CLUB',
+                id: id,
                 club: club
             };
         }

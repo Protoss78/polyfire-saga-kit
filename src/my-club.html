@@ -50,7 +50,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     },
                     club: {
                         type: Object,
-                        observer: '_dataChanged',
                         statePath: 'club'
                     }
                 };
@@ -69,7 +68,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     return;
                 }
                 // Automatically refresh the list when this view is currently active
-                if (location.page === this.constructor.page) {
+                if (this.isActivePage()) {
                     this.refresh();
                 }
             }

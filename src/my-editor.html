@@ -10,7 +10,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
-<link rel="import" href="../bower_components/polymerfire/firebase-document.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../bower_components/paper-card/paper-card.html">
 <link rel="import" href="redux/app-store.html">
@@ -33,16 +32,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             }
         </style>
 
-        <firebase-document
-                id="document"
-                path="{{_url}}"
-                data="{{_data}}">
-        </firebase-document>
-
-        <paper-card heading="[[_editData.name]]">
+        <paper-card heading="[[club.name]]">
             <div class="card-content">
-                <paper-input label="Name" value="{{_editData.name}}"></paper-input>
-                <paper-input label="Description" value="{{_editData.description}}"></paper-input>
+                <paper-input label="Name" value="{{club.name}}"></paper-input>
+                <paper-input label="Description" value="{{club.description}}"></paper-input>
             </div>
             <div class="card-actions flexbox">
                 <paper-icon-button icon="my-icons:arrow-back" on-click="goBack"></paper-icon-button>
@@ -65,29 +58,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                         statePath: 'location',
                         observer: '_locationChanged'
                     },
-                    editUrl: {
-                        type: String,
-                        statePath: 'editUrl',
-                        observer: '_editUrlChanged'
-                    },
-                    _editData: {
-                        type: Object
-                    },
                     id: {
                         type: String,
                         statePath: 'id'
                     },
-                    _url: {
-                        type: String,
-                        value: ''
-                    },
-                    _data: {
-                        type: Object,
-                        observer: '_dataChanged'
-                    },
                     _mode: {
                         type: String,
                         value: 'edit'
+                    },
+                    club: {
+                        type: Object,
+                        statePath: 'club'
                     }
                 };
             }
@@ -105,31 +86,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     return;
                 }
                 // Automatically refresh the list when this view is currently active
-                if (location.page === this.constructor.page) {
+                if (this.isActivePage()) {
                     this.refresh();
-                }
-            }
-
-            // Called whenever the edit URL changed
-            _editUrlChanged(editUrl) {
-                // Set URL to blank when we are not active to trigger reload when activated the next time
-                if (!this.isActivePage()) {
-                    this._url = '';
-                    return;
-                }
-                if (editUrl.indexOf('/undefined') > -1) {
-                    this._url = '/clubs';
-                } else {
-                    this._url = editUrl;
-                }
-            }
-
-            _dataChanged(_data) {
-                this._editData = Object.assign({}, _data);
-                // Signal that the document was successfully loaded
-                // Ignore it when we are saving -> then the url is null
-                if (this._url) {
-                    this.dispatch(AppStore.actions.finalizeClubLoad(_data));
                 }
             }
 
@@ -152,27 +110,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
             doSave() {
                 if (this._mode === 'edit') {
-                    this.dispatch(AppStore.actions.updateClub(this._editData));
+                    this.dispatch(AppStore.actions.updateClub(this.id, this.club));
                 } else {
-                    this.dispatch(AppStore.actions.saveNewClub(this._editData));
+                    this.dispatch(AppStore.actions.saveNewClub(this.club));
                 }
-                /*this.dispatch(AppStore.actions.showSpinner(true));
-                // Save edited
-                let promise = null;
-                if (this._mode === 'edit') {
-                    promise = this.$.document.setStoredValue(this._url, this._editData);
-                } else {
-                    promise = this.$.document.db.ref('/clubs').push(this._editData);
-                }
-                promise.then(() => {
-                    this.dispatch(AppStore.actions.showSpinner(false));
-                    this.goBack();
-                    this.dispatch(AppStore.actions.showInfo('Club saved'));
-                }).catch((error) => {
-                    console.log(error);
-                    this.dispatch(AppStore.actions.showError('Error while saving club', error));
-                    this.dispatch(AppStore.actions.showSpinner(false));
-                });*/
             }
         }
 
