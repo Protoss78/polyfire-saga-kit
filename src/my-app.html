@@ -87,7 +87,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 database-url="https://pofiresa.firebaseio.com/"
                 api-key="AIzaSyDKa7_h0sI5YO4UAnmFfSc3cKk-tmFieIw"
                 storage-bucket=""
-                messaging-sender-id="611982670857">
+                messaging-sender-id="611982670857"
+                on-app-changed="_firebaseAppChanged">
         </firebase-app>
 
         <redux-router></redux-router>
@@ -173,6 +174,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
             _showPage404() {
                 this.dispatch(AppStore.actions.navigateTo({page: 'view404'}));
+            }
+
+            _firebaseAppChanged(event) {
+                console.log(event.detail.value);
+                this.dispatch(AppStore.actions.setFirebaseApp(event.detail.value));
             }
         }
 

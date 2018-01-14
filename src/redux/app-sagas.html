@@ -1,4 +1,4 @@
-<script src="../../node_modules/redux-saga/dist/redux-saga.js"></script>
+<script src="../../node_modules/redux-saga/dist/redux-saga.js"></script>s
 
 <script>
 
@@ -121,6 +121,50 @@
             }
         }
 
+        const getFirebaseApp = (state) => state.firebaseApp;
+
+        function* _getRef (path) {
+            let app = yield effects.select(getFirebaseApp);
+            return app.database().ref(path);
+        }
+
+        function* create (pathOrRef, data) {
+            let ref = yield effects.call(_getRef, path);
+            const result = yield effects.call([ref, ref.push], data);
+
+            return result.key
+        }
+
+        function* update (pathOrRef, data) {
+            let ref = yield effects.call(_getRef, path);
+            yield effects.call([ref, ref.set], data);
+        }
+
+        function* patch (path, data) {
+            let ref = yield effects.call(_getRef, path);
+            yield effects.call([ref, ref.update], data);
+        }
+
+        function* _delete (path) {
+            let app = yield effects.select(getFirebaseApp);
+            let ref = app.database().ref(path);
+            yield effects.call([ref, ref.remove]);
+        }
+
+
+        function* deleteClub(action) {
+            try {
+                yield effects.put(MyApp.actions.showSpinner(true));
+                yield effects.call(_delete, '/clubs/' + action.id);
+                yield effects.put(MyApp.actions.showSpinner(false));
+                yield effects.put(MyApp.actions.showInfo('Club deleted'));
+            } catch (e) {
+                yield effects.put(MyApp.actions.showError('Error while creating club', e));
+                yield effects.put(MyApp.actions.showSpinner(false));
+            }
+
+        }
+
         /*
           Starts loadList on each dispatched `LOAD_LIST` action.
           Allows concurrent fetches of list loads.
@@ -135,6 +179,7 @@
             yield effects.takeEvery('DISPLAY_CLUB', displayClub);
             yield effects.takeEvery('FINALIZE_CLUB_LOAD', clubLoaded);
             yield effects.takeEvery('CREATE_CLUB', createClub);
+            yield effects.takeEvery('DELETE_CLUB', deleteClub);
         }
 
         AppStore.rootSaga = rootSaga;

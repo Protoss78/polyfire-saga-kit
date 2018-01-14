@@ -79,6 +79,14 @@
             return state;
         }
 
+        function firebaseApp(state = {}, action) {
+            switch (action.type) {
+                case 'SET_FIREBASE_APP':
+                    return action.app;
+            }
+            return state;
+        }
+
         function showToast(state= {}, action) {
             switch (action.type) {
                 case 'SHOW_INFO':
@@ -115,7 +123,8 @@
             id,
             editUrl,
             club,
-            showToast
+            showToast,
+            firebaseApp
         })
 
     }());

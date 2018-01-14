@@ -143,6 +143,13 @@
             };
         }
 
+        function setFirebaseApp(app) {
+            return {
+                type: 'SET_FIREBASE_APP',
+                app: app
+            };
+        }
+
         AppStore.actions = {
             showSpinner,
             setLoadedList,
@@ -165,7 +172,8 @@
             deleteClub,
             showQuestion,
             showInfo,
-            showError
+            showError,
+            setFirebaseApp
         }
 
     }());
