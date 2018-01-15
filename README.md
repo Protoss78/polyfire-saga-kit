@@ -16,7 +16,7 @@ Mainly because I'm teaching myself on the way and got inspiration from various b
 * [Redux-Saga Documentation](https://redux-saga.js.org/)
 * [A Guide For Building A React Redux CRUD App](https://medium.com/@rajaraodv/a-guide-for-building-a-react-redux-crud-app-7fe0b8943d0f)
 * [How to combine polymer-redux and \<app-route\>?](https://stackoverflow.com/questions/41440316/how-to-combine-polymer-redux-and-app-route/43479815)
-* [Greate redux-saga-firebase npm package - will use it for Polymer 3.0](https://github.com/n6g7/redux-saga-firebase)
+* [Great redux-saga-firebase npm package - will use it for Polymer 3.0](https://github.com/n6g7/redux-saga-firebase)
 
 ## Live Demo
 The current project state can be found here: https://pofiresa.firebaseapp.com
